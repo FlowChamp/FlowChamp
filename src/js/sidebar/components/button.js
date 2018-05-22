@@ -31,9 +31,9 @@ const Label = styled.h3`
    margin: 0;
 `;
 
-const Button = ({ label, icon, onEvent }) => {
+const Button = ({ label, icon, onClick }) => {
    return (
-      <Container>
+      <Container onClick={onClick}>
          <Label>{label}</Label>
          {icon}
       </Container>

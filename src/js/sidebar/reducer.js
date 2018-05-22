@@ -2,6 +2,7 @@ import {
    TOGGLE_SIDEBAR,
    NEW_SIDEBAR_VIEW,
    OLD_SIDEBAR_VIEW,
+   EMPTY_SIDEBAR,
 } from './constants';
 
 const initialState = {
@@ -17,7 +18,7 @@ const sidebarReducer = (state = initialState, action) => {
             isOpen: action.value,
          };
       case NEW_SIDEBAR_VIEW:
-         const { popStack } = action.view;
+         const popStack = action.view.popStack || false;
          const len = state.viewStack.length;
 
          return {
@@ -35,6 +36,11 @@ const sidebarReducer = (state = initialState, action) => {
                  ...state,
                  viewStack: [...state.viewStack.slice(0, length - 1)],
               };
+      case EMPTY_SIDEBAR:
+         return {
+            ...state,
+            viewStack: [...state.viewStack.slice(0, 1)],
+         };
       default:
          return state;
    }

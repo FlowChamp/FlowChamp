@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Menu, ArrowLeft, UserPlus, UserMinus } from 'react-feather';
 import { toggleSidebar, newSidebarView, oldSidebarView } from '../actions';
-import { logOut } from '../../auth/actions';
+import { logOut } from '../../user/actions';
 import { constants } from '../../toolbox';
 
 const { color } = constants;

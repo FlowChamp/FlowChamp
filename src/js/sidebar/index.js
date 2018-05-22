@@ -1,3 +1,5 @@
+// src/js/sidebar/index.js
+
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -5,6 +7,7 @@ import NavBar from './components/nav_bar';
 import MainView from './views/main/index';
 import LoginView from './views/login/index';
 import ChartSelectView from './views/chart_select/index';
+import ChartNamerView from './views/chart_namer/index';
 
 const Container = styled.div`
    position: fixed;
@@ -48,6 +51,7 @@ const views = {
    'main': <MainView />,
    'login': <LoginView />,
    'chartSelect': <ChartSelectView />,
+   'chartNamer': <ChartNamerView />,
 }
 
 const mapStateToProps = state => {
@@ -77,17 +81,6 @@ class Sidebar extends Component {
             isClosing: false
          });
       }, 290);
-   }
-
-   handleEvent = options => {
-      switch(options.type) {
-         case 'old-sidebar-view':
-            this.oldView(options);
-            break;
-         default:
-            this.props.onEvent(options);
-            break;
-      }
    }
 
    componentDidUpdate() {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Input, Toggle, Submitter } from '../../../toolbox';
-import { logIn } from '../../../auth/actions';
+import { logIn } from '../../../user/actions';
 
 const Form = styled.form`
    display: flex;
@@ -34,11 +34,16 @@ const mapDispatchToProps = dispatch => {
 }
 
 class LoginForm extends Component {
-   state = {
-      remember: false,
-      username: null,
-      password: null,
-   };
+   constructor(props) {
+      super(props);
+      const { config } = props.auth;
+
+      this.state = {
+         remember: false,
+         username: config ? config.username : null,
+         password: null,
+      };
+   }
 
    toggleRemember = value => {
       this.setState({ remember: value });
@@ -66,6 +71,7 @@ class LoginForm extends Component {
    render() {
       const { remember } = this.state;
       const { auth } = this.props;
+      const { username } = this.state || auth.config || null;
 
       return (
          <Form onSubmit={this.handleSubmit}>
@@ -73,13 +79,15 @@ class LoginForm extends Component {
                type="text"
                placeholder="Username"
                required
-               autoFocus
+               autoFocus={!username}
+               value={username || ''}
                onChange={this.handleUsernameChange}
             />
             <Input
                type="password"
                placeholder="Password"
                required
+               autoFocus={username && username.length}
                onChange={this.handlePasswordChange}
             />
             <Toggle

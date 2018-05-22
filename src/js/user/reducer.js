@@ -8,12 +8,16 @@ import {
    USER_CONFIG_SUCCESS,
    USER_CONFIG_FAILURE,
    ACTIVE_CHART_SUCCESS,
+   ADD_CHART_REQUEST,
+   ADD_CHART_SUCCESS,
+   ADD_CHART_FAILURE,
 } from './constants';
 
 const initialState = {
    loggedIn: false,
    loggingIn: false,
    loggingOut: false,
+   addingChart: false,
    credentials: null,
    error: null,
    config: null,
@@ -64,10 +68,9 @@ const authReducer = (state = initialState, action) => {
             config: action.config,
       });
       case USER_CONFIG_FAILURE:
-         console.log("USER_CONFIG_FAILURE");
          return Object.assign({}, state, {
             loggingIn: false,
-            error: action.error,
+            loggedIn: false,
          });
       case ACTIVE_CHART_SUCCESS:
          return Object.assign({}, state, {
@@ -75,6 +78,21 @@ const authReducer = (state = initialState, action) => {
                ...state.config,
                active_chart: action.active_chart
             }
+      });
+      case ADD_CHART_REQUEST:
+         return Object.assign({}, state, {
+            addingChart: true,
+            error: null,
+         });
+      case ADD_CHART_SUCCESS:
+         return Object.assign({}, state, {
+            addingChart: false,
+            config: action.config,
+      });
+      case ADD_CHART_FAILURE:
+         return Object.assign({}, state, {
+            addingChart: false,
+            error: action.error
          });
       default:
          return state;

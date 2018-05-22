@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { fetchStockCharts } from '../../../apps/flowchart/actions';
+import { newSidebarView } from '../../actions';
 import Button from '../../components/button';
 
 const Container = styled.div`
@@ -21,10 +22,20 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
    return {
       fetchStockCharts: () => dispatch(fetchStockCharts()),
+      newSidebarView: view => dispatch(newSidebarView(view)),
    };
 };
 
 class ChartSelectView extends Component {
+   selectChart = major => {
+      this.props.newSidebarView({
+         name: 'chartNamer',
+         props: {
+            major,
+         },
+      });
+   };
+
    getChartButtons = () => {
       const { flowchart } = this.props;
       const { stockCharts } = flowchart;
@@ -33,28 +44,28 @@ class ChartSelectView extends Component {
          return;
       }
       return stockCharts.map((chart, index) => {
-         const name = Object.keys(chart)[0];
+         const major = Object.keys(chart)[0];
          const key = chart[Object.keys(chart)[0]];
-         const label = name.split('_').join(' ');
+         const label = major.split('_').join(' ');
 
-         return <Button key={key} label={label} onEvent={this.handleClick}/>
+         return (
+            <Button
+               key={key}
+               label={label}
+               onClick={() => this.selectChart(major)}
+            />
+         );
       });
-   }
+   };
 
-   handleClick = options => {
-
-   }
+   handleClick = options => {};
 
    componentDidMount() {
       this.props.fetchStockCharts();
    }
 
    render() {
-      return (
-         <Container>
-            {this.getChartButtons()}
-         </Container>
-      );
+      return <Container>{this.getChartButtons()}</Container>;
    }
 }
 

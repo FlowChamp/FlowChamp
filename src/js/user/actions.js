@@ -12,6 +12,9 @@ import {
    ACTIVE_CHART_REQUEST,
    ACTIVE_CHART_SUCCESS,
    ACTIVE_CHART_FAILURE,
+   ADD_CHART_REQUEST,
+   ADD_CHART_SUCCESS,
+   ADD_CHART_FAILURE
 } from './constants';
 
 /* LOG IN */
@@ -52,6 +55,7 @@ export const logOut = config => {
 
       return user.logOut(config)
       .then(() => {
+         localStorage.removeItem('flowchampConfig');
          dispatch({
             type: LOGOUT_SUCCESS,
             config
@@ -84,7 +88,7 @@ export const fetchUserConfig = (prevConfig) => {
          });
       })
       .catch(error => {
-         // User token probably expired
+         // User token probably expired. Log them out in this case
          dispatch({
             type: USER_CONFIG_FAILURE,
             error
@@ -123,3 +127,26 @@ export const setActiveChart = (config, name) => {
    }
 }
 
+export const addChart = ({ config, name, major }) => {
+   return dispatch => {
+      const user = new UserManager(config);
+      dispatch(dispatch({
+         type: ADD_CHART_REQUEST
+      }));
+
+      return user.addChart({ name, major })
+      .then(newConfig => {
+         console.log(newConfig);
+         dispatch({
+            type: ADD_CHART_SUCCESS,
+            config: newConfig
+         });
+      })
+      .catch(error => {
+         dispatch({
+            type: ADD_CHART_FAILURE,
+            error
+         });
+      });
+   }
+}

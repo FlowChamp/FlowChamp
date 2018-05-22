@@ -26,7 +26,6 @@ export default class UserManager {
    };
 
    logOut = config => {
-      console.log(config);
       const { username } = config;
 
       return this.makeRequest({
@@ -39,8 +38,29 @@ export default class UserManager {
       });
    };
 
-   getUserConfig = config => {
-      const { username } = config;
+   addChart = ({ name, major }) => {
+      const { username } = this.config;
+
+      return this.makeRequest({
+         url: `${this.url}/users/${username}/import`,
+         data: {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            credentials: this.credentials,
+            mode: this.mode,
+            body: JSON.stringify({
+               target: major,
+               year: '15-17',
+               destination: name
+            }),
+         },
+      });
+   }
+
+   getUserConfig = () => {
+      const { username } = this.config;
 
       return this.makeRequest({
          url: `${this.url}/users/${username}/config`,

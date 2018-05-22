@@ -35,13 +35,14 @@ const ButtonContainer = styled.div`
    display: flex;
    justify-content: space-between;
    align-items: center;
-   height: 4em;
+   min-height: 4em;
    transition: all 0.15s ease;
    border-left: 8px solid
       ${props => (props.isActive ? color.blue[3] : 'transparent')};
    border-bottom: ${props =>
       props.noBorder ? 'none' : '1px solid ' + color.gray[3]};
    cursor: pointer;
+   overflow: auto;
 
    svg {
       margin: auto;
@@ -116,26 +117,29 @@ class ChartSelector extends Component {
       e.stopPropagation();
       const { auth } = this.props;
       const { config } = auth;
-
-
    }
 
    getUserCharts = () => {
       const { auth } = this.props;
       const { config } = auth;
-      if (!config) return;
+      if (!config || !auth.loggedIn) return;
       const { charts, active_chart } = config;
       const chartButtons = [];
 
       for (let name in charts) {
          const _dept = charts[name];
          const subtitle = _dept.split('_').join(' ');
+         const isActive = name === active_chart;
 
          chartButtons.push(
             <ButtonContainer
                key={name}
-               isActive={name === active_chart}
-               onClick={() => this.props.setActiveChart(config, name)}>
+               isActive={isActive}
+               onClick={
+                  isActive
+                     ? null
+                     : () => this.props.setActiveChart(config, name)
+               }>
                <TextContainer>
                   <Title>{name}</Title>
                   <Subtitle>{subtitle}</Subtitle>
@@ -153,10 +157,12 @@ class ChartSelector extends Component {
       return (
          <Container>
             <Header>Flowcharts</Header>
-            <ChartButtonContainer>{this.getUserCharts()}</ChartButtonContainer>
-            <ButtonContainer noBorder onClick={this.newChart}>
-               <Plus size={30} />
-            </ButtonContainer>
+            <ChartButtonContainer>
+               {this.getUserCharts()}
+               <ButtonContainer noBorder onClick={this.newChart}>
+                  <Plus size={30} />
+               </ButtonContainer>
+            </ChartButtonContainer>
          </Container>
       );
    }
