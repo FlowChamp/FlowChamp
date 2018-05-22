@@ -10,23 +10,22 @@ const Container = styled.div`
    height: 3em;
    padding-left: 1em;
    border-bottom: 1px solid ${color.gray[1]};
-   animation: slideIn 0.35s ease;
    cursor: pointer;
+   animation: fadein 0.25s ease;
 
    &:hover {
       background: ${color.gray[1]};
    }
 
-   @keyframes slideIn {
+   @keyframes fadein {
       0% {
-         transform: translateX(10%);
          opacity: 0;
       }
    }
-`
+`;
 
 const Label = styled.h3`
-   font-family: "SF Pro Display";
+   font-family: 'SF Pro Display';
    font-weight: normal;
    margin: 0;
 `;
@@ -37,7 +36,7 @@ const Button = ({ label, icon, onClick }) => {
          <Label>{label}</Label>
          {icon}
       </Container>
-   )
-}
+   );
+};
 
 export default Button;

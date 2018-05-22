@@ -4,12 +4,26 @@ import styled from 'styled-components';
 import { fetchStockCharts } from '../../../apps/flowchart/actions';
 import { newSidebarView } from '../../actions';
 import Button from '../../components/button';
+import { Loader, constants } from '../../../toolbox';
+
+const { animation } = constants;
+const {
+   oldViewEntering,
+   oldViewExiting,
+   slideInRight,
+   slideInLeft,
+} = animation;
+const duration = '0.3s';
 
 const Container = styled.div`
    display: flex;
    flex-direction: column;
    flex: 1;
    padding-top: 1em;
+   animation: ${props => (props.isPrevView ? slideInLeft : slideInRight)}
+      ${duration};
+   ${props => (props.enteringNewView ? oldViewExiting : null)};
+   ${props => (props.enteringOldView ? oldViewEntering : null)};
 `;
 
 const mapStateToProps = state => {
@@ -41,7 +55,7 @@ class ChartSelectView extends Component {
       const { stockCharts } = flowchart;
 
       if (!stockCharts) {
-         return;
+         return <Loader alignment="center"/>
       }
       return stockCharts.map((chart, index) => {
          const major = Object.keys(chart)[0];
@@ -65,7 +79,16 @@ class ChartSelectView extends Component {
    }
 
    render() {
-      return <Container>{this.getChartButtons()}</Container>;
+      const { isPrevView, enteringNewView, enteringOldView } = this.props;
+
+      return (
+         <Container
+            isPrevView={isPrevView}
+            enteringNewView={enteringNewView}
+            enteringOldView={enteringOldView}>
+            {this.getChartButtons()}
+         </Container>
+      );
    }
 }
 

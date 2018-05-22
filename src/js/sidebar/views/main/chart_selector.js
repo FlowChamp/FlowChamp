@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Plus, X } from 'react-feather';
 import { newSidebarView } from '../../actions';
 import { setActiveChart } from '../../../user/actions';
-import { constants } from '../../../toolbox';
+import { Loader, constants } from '../../../toolbox';
 
 const { color } = constants;
 
@@ -32,6 +32,7 @@ const ChartButtonContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
+   position: relative;
    display: flex;
    justify-content: space-between;
    align-items: center;
@@ -74,6 +75,11 @@ const Subtitle = styled.h4`
 `;
 
 const DeleteContainer = styled.div`
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   right: 0;
+   width: 2em;
    display: flex;
    justify-content: center;
    align-items: center;
@@ -102,6 +108,16 @@ const mapDispatchToProps = dispatch => {
 };
 
 class ChartSelector extends Component {
+   state = {
+      loading: {}
+   }
+
+   static getDerivedStateFromProps(nextProps, prevState) {
+      return {
+         loading: {}
+      }
+   }
+
    newChart = () => {
       const { auth } = this.props;
       const { loggedIn } = auth;
@@ -113,15 +129,35 @@ class ChartSelector extends Component {
       });
    };
 
+   setActive = (config, name) => {
+      this.props.setActiveChart(config, name);
+      this.setState(state => {
+         if (state.loading[name]) {
+            return state;
+         }
+         state.loading[name] = true;
+         return state;
+      });
+   }
+
    deleteChart(e, name) {
       e.stopPropagation();
       const { auth } = this.props;
       const { config } = auth;
+      this.setState(state => {
+         if (state.loading[name]) {
+            return state;
+         }
+         state.loading[name] = true;
+         return state;
+      });
    }
 
    getUserCharts = () => {
       const { auth } = this.props;
+      const { loading } = this.state;
       const { config } = auth;
+
       if (!config || !auth.loggedIn) return;
       const { charts, active_chart } = config;
       const chartButtons = [];
@@ -138,14 +174,14 @@ class ChartSelector extends Component {
                onClick={
                   isActive
                      ? null
-                     : () => this.props.setActiveChart(config, name)
+                     : () => this.setActive(config, name)
                }>
                <TextContainer>
                   <Title>{name}</Title>
                   <Subtitle>{subtitle}</Subtitle>
                </TextContainer>
                <DeleteContainer onClick={e => this.deleteChart(e, name)}>
-                  <X />
+                  {loading[name] ? <Loader size="small" /> : <X />}
                </DeleteContainer>
             </ButtonContainer>,
          );

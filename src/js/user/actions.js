@@ -136,7 +136,6 @@ export const addChart = ({ config, name, major }) => {
 
       return user.addChart({ name, major })
       .then(newConfig => {
-         console.log(newConfig);
          dispatch({
             type: ADD_CHART_SUCCESS,
             config: newConfig

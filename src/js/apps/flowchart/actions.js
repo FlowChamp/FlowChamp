@@ -40,7 +40,6 @@ export const fetchUserCharts = (config) => {
 
       return api.getUserCharts()
       .then(userCharts => {
-         console.log(userCharts);
          dispatch({
             type: USER_CHARTS_SUCCESS,
             userCharts

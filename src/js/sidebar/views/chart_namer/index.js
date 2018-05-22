@@ -3,14 +3,22 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { newSidebarView, emptySidebar } from '../../actions';
 import { addChart } from '../../../user/actions';
-import { Input, Submitter } from '../../../toolbox';
+import { Input, Submitter, constants } from '../../../toolbox';
 //import Button from '../../components/button';
+
+const { animation } = constants;
+const { oldViewEntering, oldViewExiting, slideInRight, slideInLeft } = animation;
+const duration = '0.3s';
 
 const Container = styled.div`
    display: flex;
    flex-direction: column;
    flex: 1;
    padding-top: 1em;
+   animation: ${props => (props.isPrevView ? slideInLeft : slideInRight)}
+      ${duration};
+   ${props => (props.enteringNewView ? oldViewExiting : null)};
+   ${props => (props.enteringOldView ? oldViewEntering : null)};
 `;
 
 const Form = styled.form`
@@ -81,14 +89,18 @@ class ChartNamerView extends Component {
    componentDidUpdate() {
       if (this.state.addedChart) {
          this.props.emptySidebar();
+         this.setState({ addedChart: false });
       }
    }
 
    render() {
-      const { auth } = this.props;
+      const { auth, isPrevView, enteringNewView, enteringOldView } = this.props;
 
       return (
-         <Container>
+         <Container
+            isPrevView={isPrevView}
+            enteringNewView={enteringNewView}
+            enteringOldView={enteringOldView}>
             <Form onSubmit={this.handleSubmit}>
                <Input type="text" placeholder="Chart name" onChange={this.handleChange} />
                <Submitter label="Save chart" submitted={auth.addingChart} />

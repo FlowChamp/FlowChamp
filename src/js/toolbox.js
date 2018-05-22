@@ -1,13 +1,50 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import Switch from 'react-ios-switch';
 import LoadingIndicator from 'react-loading-indicator';
 
+const duration = '0.3s';
 const constants = {
    color: {
       blue: ["#EBF4FB", "#D6E8F7", "#ADD2EF", "#5CA4E0", "#0071CE", "#005091", "#00325C"],
       gray: ["#FAFAFA", "#F5F5F5", "#EEEEEE", "#E1E1E2", "#BDBEBF", "#9E9FA0", "#757778", "#636567", "#424446", "#212426"]
    },
+
+   animation: {
+      oldViewEntering: css`
+         animation: slideOutRight ${duration};
+
+         @keyframes slideOutRight {
+            100% {
+               opacity: 0;
+               transform: translateX(10%);
+            }
+         }
+      `,
+
+      oldViewExiting: css`
+         animation: slideOutLeft ${duration};
+
+         @keyframes slideOutLeft {
+            100% {
+               opacity: 0;
+               transform: translateX(-10%);
+            }
+         }
+      `,
+      slideInRight: keyframes`
+         0% {
+            opacity: 0;
+            transform: translateX(10%);
+         }
+      `,
+      slideInLeft: keyframes`
+         0% {
+            opacity: 0;
+            transform: translateX(-10%);
+         }
+      `,
+   }
 };
 
 const { color } = constants;
@@ -73,8 +110,10 @@ const Submit = styled.input.attrs({
 
 const LoadingContainer = styled.div`
    transition: all 0.15s ease;
-   opacity: ${props => props.hide ? 0 : 1}
+   opacity: ${props => props.hidden ? 0 : 1}
    user-select: none;
+   display: flex;
+   justify-content: ${props => props.alignment || 'flex-start'}
 `;
 
 const Submitter = ({ label, submitted, onSubmit }) => {
@@ -88,4 +127,15 @@ const Submitter = ({ label, submitted, onSubmit }) => {
    );
 }
 
-export { constants, Input, Toggle, Submitter };
+const Loader = ({ size, alignment }) => {
+   const len= size === 'small' ? 4 : 8;
+   const width = size === 'small' ? 2 : 3;
+
+   return (
+      <LoadingContainer alignment={alignment}>
+         <LoadingIndicator segmentLength={len} segmentWidth={width} />
+      </LoadingContainer>
+   )
+}
+
+export { constants, Input, Toggle, Submitter, Loader };

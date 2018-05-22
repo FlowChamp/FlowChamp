@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Menu, ArrowLeft, UserPlus, UserMinus } from 'react-feather';
+import { Menu, ArrowLeft, UserPlus, UserMinus, Settings } from 'react-feather';
 import { toggleSidebar, newSidebarView, oldSidebarView } from '../actions';
 import { logOut } from '../../user/actions';
 import { constants } from '../../toolbox';
@@ -26,6 +26,12 @@ const ButtonContainer = styled.div`
 
    svg {
       cursor: pointer;
+      margin: 0 8px;
+      color: ${color.gray[7]};
+
+      &:last-child {
+         margin-right: 0;
+      }
    }
 `;
 
@@ -33,15 +39,15 @@ const IconContainer = styled.div`
    height: 100%;
    display: flex;
    align-items: center;
-   opacity: ${props => props.hide ? 0 : 1};
-   pointer-events: ${props => props.hide ? 'none' : 'default'};
+   opacity: ${props => (props.hide ? 0 : 1)};
+   pointer-events: ${props => (props.hide ? 'none' : 'default')};
    transition: all 0.15s ease;
 `;
 
 const mapStateToProps = state => {
    return {
       sidebar: state.sidebar,
-      auth: state.auth
+      auth: state.auth,
    };
 };
 
@@ -77,17 +83,27 @@ class NavBar extends Component {
       return (
          <Container>
             <ButtonContainer>
-               <Menu size={30} onClick={() => this.props.toggleSidebar(false)} />
+               <Menu
+                  size={30}
+                  onClick={() => this.props.toggleSidebar(false)}
+               />
                <IconContainer hide={onMainView}>
                   <ArrowLeft size={30} onClick={this.props.oldSidebarView} />
                </IconContainer>
             </ButtonContainer>
             <ButtonContainer justify="flex-end">
                <IconContainer hide={!onMainView}>
+                  <Settings
+                     size={30}
+                     onClick={() => this.newView('settings', {})}
+                  />
                   {loggedIn ? (
                      <UserMinus size={30} onClick={this.logOut} />
                   ) : (
-                     <UserPlus size={30} onClick={() => this.newView('login')} />
+                     <UserPlus
+                        size={30}
+                        onClick={() => this.newView('login')}
+                     />
                   )}
                </IconContainer>
             </ButtonContainer>
