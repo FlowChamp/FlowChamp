@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { newSidebarView, emptySidebar } from '../../actions';
 import { addChart } from '../../../user/actions';
+import Header from '../../components/header';
 import { Input, Submitter, constants } from '../../../toolbox';
 //import Button from '../../components/button';
 
@@ -101,8 +102,9 @@ class ChartNamerView extends Component {
             isPrevView={isPrevView}
             enteringNewView={enteringNewView}
             enteringOldView={enteringOldView}>
+            <Header label="Give It a Name"/>
             <Form onSubmit={this.handleSubmit}>
-               <Input type="text" placeholder="Chart name" onChange={this.handleChange} />
+               <Input type="text" autoFocus placeholder="Chart name" onChange={this.handleChange} />
                <Submitter label="Save chart" submitted={auth.addingChart} />
             </Form>
          </Container>

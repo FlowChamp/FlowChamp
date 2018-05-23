@@ -59,6 +59,19 @@ export default class UserManager {
       });
    }
 
+   deleteChart = (name) => {
+      const { username } = this.config;
+
+      return this.makeRequest({
+         url: `${this.url}/users/${username}/charts/${name}`,
+         data: {
+            method: 'DELETE',
+            credentials: this.credentials,
+            mode: this.mode,
+         },
+      });
+   }
+
    getUserConfig = () => {
       const { username } = this.config;
 

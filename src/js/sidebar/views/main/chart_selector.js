@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Plus, X } from 'react-feather';
 import { newSidebarView } from '../../actions';
-import { setActiveChart } from '../../../user/actions';
+import { setActiveChart, deleteChart } from '../../../user/actions';
 import { Loader, constants } from '../../../toolbox';
 
 const { color } = constants;
@@ -104,18 +104,19 @@ const mapDispatchToProps = dispatch => {
    return {
       newSidebarView: view => dispatch(newSidebarView(view)),
       setActiveChart: (config, name) => dispatch(setActiveChart(config, name)),
+      deleteChart: (config, name) => dispatch(deleteChart(config, name)),
    };
 };
 
 class ChartSelector extends Component {
    state = {
-      loading: {}
-   }
+      loading: {},
+   };
 
    static getDerivedStateFromProps(nextProps, prevState) {
       return {
-         loading: {}
-      }
+         loading: {},
+      };
    }
 
    newChart = () => {
@@ -138,12 +139,16 @@ class ChartSelector extends Component {
          state.loading[name] = true;
          return state;
       });
-   }
+   };
 
    deleteChart(e, name) {
       e.stopPropagation();
+
       const { auth } = this.props;
       const { config } = auth;
+
+      this.props.deleteChart(config, name);
+
       this.setState(state => {
          if (state.loading[name]) {
             return state;
@@ -171,11 +176,7 @@ class ChartSelector extends Component {
             <ButtonContainer
                key={name}
                isActive={isActive}
-               onClick={
-                  isActive
-                     ? null
-                     : () => this.setActive(config, name)
-               }>
+               onClick={isActive ? null : () => this.setActive(config, name)}>
                <TextContainer>
                   <Title>{name}</Title>
                   <Subtitle>{subtitle}</Subtitle>

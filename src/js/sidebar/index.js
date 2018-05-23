@@ -3,7 +3,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import NavBar from './components/nav_bar';
 import MainView from './views/main/index';
 import LoginView from './views/login/index';
 import ChartSelectView from './views/chart_select/index';
@@ -11,7 +10,7 @@ import ChartNamerView from './views/chart_namer/index';
 
 const Container = styled.div`
    position: fixed;
-   top: 0;
+   top: 3.5em;
    bottom: 0;
    left: 0;
    width: 100%;
@@ -40,7 +39,7 @@ const Container = styled.div`
 
 const ViewContainer = styled.div`
    position: absolute;
-   top: 3.5em;
+   top: 0;
    bottom: 0;
    left: 0;
    right: 0;
@@ -142,7 +141,6 @@ class Sidebar extends Component {
 
       return (
          <Container isOpen={isOpen} isClosing={isClosing}>
-            <NavBar />
             <ViewContainer>{this.getCurrentView()}</ViewContainer>
          </Container>
       );

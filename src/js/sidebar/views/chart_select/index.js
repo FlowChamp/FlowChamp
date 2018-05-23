@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { fetchStockCharts } from '../../../apps/flowchart/actions';
 import { newSidebarView } from '../../actions';
 import Button from '../../components/button';
+import Header from '../../components/header';
 import { Loader, constants } from '../../../toolbox';
 
 const { animation } = constants;
@@ -19,7 +20,6 @@ const Container = styled.div`
    display: flex;
    flex-direction: column;
    flex: 1;
-   padding-top: 1em;
    animation: ${props => (props.isPrevView ? slideInLeft : slideInRight)}
       ${duration};
    ${props => (props.enteringNewView ? oldViewExiting : null)};
@@ -66,6 +66,7 @@ class ChartSelectView extends Component {
             <Button
                key={key}
                label={label}
+               icon="ChevronRight"
                onClick={() => this.selectChart(major)}
             />
          );
@@ -86,6 +87,7 @@ class ChartSelectView extends Component {
             isPrevView={isPrevView}
             enteringNewView={enteringNewView}
             enteringOldView={enteringOldView}>
+            <Header label="New Flowchart"/>
             {this.getChartButtons()}
          </Container>
       );

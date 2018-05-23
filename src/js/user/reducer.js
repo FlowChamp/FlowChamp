@@ -11,6 +11,7 @@ import {
    ADD_CHART_REQUEST,
    ADD_CHART_SUCCESS,
    ADD_CHART_FAILURE,
+   DELETE_CHART_SUCCESS,
 } from './constants';
 
 const initialState = {
@@ -94,6 +95,10 @@ const authReducer = (state = initialState, action) => {
             addingChart: false,
             error: action.error
          });
+      case DELETE_CHART_SUCCESS:
+         return Object.assign({}, state, {
+            config: action.config,
+      });
       default:
          return state;
    }

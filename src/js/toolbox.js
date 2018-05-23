@@ -12,23 +12,22 @@ const constants = {
 
    animation: {
       oldViewEntering: css`
-         animation: slideOutRight ${duration};
+         animation: slideOutRight ${duration} ease;
 
          @keyframes slideOutRight {
             100% {
                opacity: 0;
-               transform: translateX(10%);
+               transform: translateX(20%);
             }
          }
       `,
-
       oldViewExiting: css`
-         animation: slideOutLeft ${duration};
+         animation: slideOutLeft ${duration} ease;
 
          @keyframes slideOutLeft {
             100% {
                opacity: 0;
-               transform: translateX(-10%);
+               transform: translateX(-20%);
             }
          }
       `,
@@ -41,7 +40,7 @@ const constants = {
       slideInLeft: keyframes`
          0% {
             opacity: 0;
-            transform: translateX(-10%);
+            transform: translateX(-20%);
          }
       `,
    }

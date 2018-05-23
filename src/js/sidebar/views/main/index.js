@@ -9,7 +9,6 @@ const { animation } = constants;
 const {
    oldViewEntering,
    oldViewExiting,
-   slideInRight,
    slideInLeft,
 } = animation;
 const duration = '0.3s';
@@ -18,16 +17,10 @@ const Container = styled.div`
    display: flex;
    flex-direction: column;
    flex: 1;
-   padding-top: 1em;
-   animation: ${props => (props.isPrevView ? slideInLeft : slideInRight)}
+   animation: ${props => (props.isPrevView ? slideInLeft : null)}
       ${duration};
    ${props => (props.enteringNewView ? oldViewExiting : null)};
    ${props => (props.enteringOldView ? oldViewEntering : null)};
-`;
-
-const Logo = styled.img`
-   width: 40%;
-   margin: 1em auto;
 `;
 
 const mapStateToProps = state => {
@@ -51,7 +44,6 @@ class MainView extends Component {
             isPrevView={isPrevView}
             enteringNewView={enteringNewView}
             enteringOldView={enteringOldView}>
-            <Logo src="images/icons/logo_fancy.svg" />
             <ChartSelector />
          </Container>
       );

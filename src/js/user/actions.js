@@ -14,7 +14,9 @@ import {
    ACTIVE_CHART_FAILURE,
    ADD_CHART_REQUEST,
    ADD_CHART_SUCCESS,
-   ADD_CHART_FAILURE
+   ADD_CHART_FAILURE,
+   DELETE_CHART_REQUEST,
+   DELETE_CHART_SUCCESS,
 } from './constants';
 
 /* LOG IN */
@@ -146,6 +148,26 @@ export const addChart = ({ config, name, major }) => {
             type: ADD_CHART_FAILURE,
             error
          });
+      });
+   }
+}
+
+export const deleteChart = (config, name) => {
+   return dispatch => {
+      const user = new UserManager(config);
+      dispatch(dispatch({
+         type: DELETE_CHART_REQUEST
+      }));
+
+      return user.deleteChart(name)
+      .then(newConfig => {
+         dispatch({
+            type: DELETE_CHART_SUCCESS,
+            config: newConfig
+         });
+      })
+      .catch(error => {
+			console.error("Error: unable to delete chart: ", error);
       });
    }
 }
