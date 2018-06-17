@@ -16,9 +16,10 @@ const AppContainer = styled.div`
 `;
 
 const ViewContainer = styled.div`
-   display: flex;
-   flex: 1;
-   margin-top: 3em;
+   margin-top: 3.5em;
+   overflow: auto;
+   margin-left: ${props => props.sidebarOpen ? '20em' : 0};
+   transition: all 0.3s;
 `;
 
 const views = {
@@ -40,7 +41,6 @@ class FlowChamp extends Component {
       const { currentView } = this.state;
       const view = views[currentView];
       const props = {
-         onEvent: this.handleEvent,
       };
 
       try {
@@ -60,14 +60,20 @@ class FlowChamp extends Component {
    }
 
    render() {
+      const { sidebar } = this.props;
+
       return (
          <AppContainer>
             <Header />
             <Sidebar />
-            <ViewContainer>{this.getCurrentView()}</ViewContainer>
+            <ViewContainer sidebarOpen={sidebar.isOpen}>{this.getCurrentView()}</ViewContainer>
          </AppContainer>
       );
    }
 }
 
-export default connect(null, mapDispatchToProps)(FlowChamp);
+const mapStateToProps = state => ({
+   sidebar: state.sidebar
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FlowChamp);

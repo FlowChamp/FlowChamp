@@ -7,15 +7,15 @@ import { toggleSidebar, newSidebarView, oldSidebarView } from '../sidebar/action
 import { logOut } from '../user/actions';
 import { constants } from '../toolbox';
 
-const { color } = constants;
+const { color, animation } = constants;
 
 const Logo = styled.img`
    margin: 0 16px;
    margin-top: 4px;
    width: 100px;
-   display: ${props => (props.hidden ? 'none' : 'block')};
    pointer-events: none;
    user-select: none;
+   animation: ${animation.fadeIn} 0.3s ease;
 `;
 
 const Container = styled.div`

@@ -7,7 +7,8 @@ import {
    USER_CONFIG_REQUEST,
    USER_CONFIG_SUCCESS,
    USER_CONFIG_FAILURE,
-   ACTIVE_CHART_SUCCESS,
+   SET_ACTIVE_CHART_REQUEST,
+   SET_ACTIVE_CHART_SUCCESS,
    ADD_CHART_REQUEST,
    ADD_CHART_SUCCESS,
    ADD_CHART_FAILURE,
@@ -18,7 +19,7 @@ const initialState = {
    loggedIn: false,
    loggingIn: false,
    loggingOut: false,
-   addingChart: false,
+   changingChart: false,
    credentials: null,
    error: null,
    config: null,
@@ -55,6 +56,7 @@ const authReducer = (state = initialState, action) => {
             loggingOut: false,
             loggedIn: false,
             config: null,
+            chartData: null,
          });
       case USER_CONFIG_REQUEST:
          return Object.assign({}, state, {
@@ -73,7 +75,11 @@ const authReducer = (state = initialState, action) => {
             loggingIn: false,
             loggedIn: false,
          });
-      case ACTIVE_CHART_SUCCESS:
+      case SET_ACTIVE_CHART_REQUEST:
+         return Object.assign({}, state, {
+            changingChart: true,
+         });
+      case SET_ACTIVE_CHART_SUCCESS:
          return Object.assign({}, state, {
             config: {
                ...state.config,
@@ -82,17 +88,17 @@ const authReducer = (state = initialState, action) => {
       });
       case ADD_CHART_REQUEST:
          return Object.assign({}, state, {
-            addingChart: true,
+            changingChart: true,
             error: null,
          });
       case ADD_CHART_SUCCESS:
          return Object.assign({}, state, {
-            addingChart: false,
+            changingChart: false,
             config: action.config,
       });
       case ADD_CHART_FAILURE:
          return Object.assign({}, state, {
-            addingChart: false,
+            changingChart: false,
             error: action.error
          });
       case DELETE_CHART_SUCCESS:

@@ -12,6 +12,8 @@ const Container = styled.div`
    margin-left: 1em;
    padding-right: 0.5em;
    border-bottom: 1px solid ${color.gray[3]};
+   box-sizing: border-box;
+   margin-top: 1px;
    cursor: pointer;
    animation: fadein 0.25s ease;
    justify-content: space-between;

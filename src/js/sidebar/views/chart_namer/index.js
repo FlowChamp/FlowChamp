@@ -8,14 +8,17 @@ import { Input, Submitter, constants } from '../../../toolbox';
 //import Button from '../../components/button';
 
 const { animation } = constants;
-const { oldViewEntering, oldViewExiting, slideInRight, slideInLeft } = animation;
+const {
+   oldViewEntering,
+   oldViewExiting,
+   slideInRight,
+   slideInLeft,
+} = animation;
 const duration = '0.3s';
 
 const Container = styled.div`
-   display: flex;
-   flex-direction: column;
    flex: 1;
-   padding-top: 1em;
+   overflow: auto;
    animation: ${props => (props.isPrevView ? slideInLeft : slideInRight)}
       ${duration};
    ${props => (props.enteringNewView ? oldViewExiting : null)};
@@ -26,6 +29,20 @@ const Form = styled.form`
    display: flex;
    flex-direction: column;
    padding: 0 30px;
+   margin-top: 8px;
+`;
+
+const ErrorText = styled.h3`
+   font-family: 'SF Pro Display';
+   font-weight: normal;
+   color: red;
+   animation: fadeIn 0.15s ease;
+
+   @keyframes fadeIn {
+      from {
+         opacity: 0;
+      }
+   }
 `;
 
 const mapStateToProps = state => {
@@ -49,7 +66,7 @@ class ChartNamerView extends Component {
          chartName: null,
          active_chart: props.auth.config.active_chart,
          addedChart: false,
-      }
+      };
    }
 
    static getDerivedStateFromProps(nextProps, prevState) {
@@ -58,8 +75,8 @@ class ChartNamerView extends Component {
       if (nextProps.auth.config.active_chart !== prevState.active_chart) {
          return {
             active_chart,
-            addedChart: true
-         }
+            addedChart: true,
+         };
       }
       return null;
    }
@@ -72,13 +89,13 @@ class ChartNamerView extends Component {
       this.props.addChart({
          config,
          name: chartName,
-         major: this.props.major
+         major: this.props.major,
       });
    };
 
    handleChange = e => {
       this.setState({ chartName: e.target.value });
-   }
+   };
 
    componentDidMount() {
       const { config } = this.props.auth;
@@ -102,10 +119,17 @@ class ChartNamerView extends Component {
             isPrevView={isPrevView}
             enteringNewView={enteringNewView}
             enteringOldView={enteringOldView}>
-            <Header label="Give It a Name"/>
+            <Header label="Give It a Name" />
             <Form onSubmit={this.handleSubmit}>
-               <Input type="text" autoFocus placeholder="Chart name" onChange={this.handleChange} />
+               <Input
+                  type="text"
+                  autoFocus
+                  required
+                  placeholder="Chart name"
+                  onChange={this.handleChange}
+               />
                <Submitter label="Save chart" submitted={auth.addingChart} />
+               <ErrorText>{auth.error}</ErrorText>
             </Form>
          </Container>
       );

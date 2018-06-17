@@ -8,7 +8,7 @@ export default class UserManager {
    }
 
    logIn = credentials => {
-      const { username, password, remember } = credentials;
+      const { username, password } = credentials;
 
       return this.makeRequest({
          url: `${this.url}/authorize`,
@@ -20,7 +20,7 @@ export default class UserManager {
             },
             credentials: this.credentials,
             mode: this.mode,
-            body: JSON.stringify({ username, password, remember }),
+            body: JSON.stringify(credentials),
          },
       });
    };
@@ -84,6 +84,19 @@ export default class UserManager {
          },
       });
    };
+
+   getUserChart = name => {
+      const { username } = this.config;
+
+      return this.makeRequest({
+         url: `${this.url}/users/${username}/charts/${name}`,
+         data: {
+            method: 'GET',
+            credentials: this.credentials,
+            mode: this.mode,
+         },
+      });
+   }
 
    updateConfig(newConfig) {
       const { username } = newConfig;

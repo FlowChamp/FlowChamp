@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-//import { constants } from '../../toolbox';
+import { constants } from '../../toolbox';
+
+const { color } = constants;
 
 const Container = styled.div`
    display: flex;
@@ -9,10 +11,16 @@ const Container = styled.div`
 `;
 
 const Label = styled.h2`
-   font-size: 2em
-   font-weight: 500;
-   font-family: 'SF Pro Display';
-   margin: 0 0.5em;
+   font-family: "SF Pro Display";
+   font-weight: normal;
+   font-size: 1.25rem;
+   flex: 1;
+   padding: 1em;
+   border-bottom: 1px solid ${color.gray[3]};
+   box-sizing: border-box;
+   color: ${color.gray[6]}
+   letter-spacing: 1px;
+   text-transform: uppercase;
 `;
 
 const Header = ({ label }) => {

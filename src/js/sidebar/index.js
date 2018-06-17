@@ -7,8 +7,12 @@ import MainView from './views/main/index';
 import LoginView from './views/login/index';
 import ChartSelectView from './views/chart_select/index';
 import ChartNamerView from './views/chart_namer/index';
+import { constants } from '../toolbox';
+
+const { color } = constants;
 
 const Container = styled.div`
+   z-index: 30;
    position: fixed;
    top: 3.5em;
    bottom: 0;
@@ -18,9 +22,10 @@ const Container = styled.div`
    background: white;
    transform: translateX(${props => (props.isOpen ? 0 : '-100%')});
    display: ${props => (props.isOpen ? 'block' : 'none')};
-   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
+   border-right: 1px solid ${color.gray[3]}
+   box-sizing: border-box;
    animation: ${props => (props.isClosing ? 'sidebarClose' : 'sidebarOpen')}
-      0.3s;
+      0.26s;
 
    @keyframes sidebarOpen {
       0% {
@@ -44,7 +49,7 @@ const ViewContainer = styled.div`
    left: 0;
    right: 0;
    display: flex;
-   overflow: auto;
+   overflow: hidden;
 `;
 
 const views = {
@@ -91,7 +96,7 @@ class Sidebar extends Component {
             isOpen: false,
             isClosing: false,
          });
-      }, 290);
+      }, 240);
    }
 
    // New view will now be loaded
@@ -104,7 +109,7 @@ class Sidebar extends Component {
             isPrevView: this.state.enteringOldView,
             viewStack: this.props.sidebar.viewStack,
          });
-      }, 140);
+      }, 124);
    }
 
    componentDidUpdate() {

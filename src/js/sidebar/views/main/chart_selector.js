@@ -9,8 +9,6 @@ import { Loader, constants } from '../../../toolbox';
 const { color } = constants;
 
 const Container = styled.div`
-   display: flex;
-   flex-direction: column;
    flex: 1;
    overflow: auto;
 `;

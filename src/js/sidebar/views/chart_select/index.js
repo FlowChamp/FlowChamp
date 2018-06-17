@@ -14,16 +14,15 @@ const {
    slideInRight,
    slideInLeft,
 } = animation;
-const duration = '0.3s';
+const duration = '0.25s';
 
 const Container = styled.div`
-   display: flex;
-   flex-direction: column;
    flex: 1;
    animation: ${props => (props.isPrevView ? slideInLeft : slideInRight)}
       ${duration};
    ${props => (props.enteringNewView ? oldViewExiting : null)};
    ${props => (props.enteringOldView ? oldViewEntering : null)};
+   overflow: auto;
 `;
 
 const mapStateToProps = state => {
