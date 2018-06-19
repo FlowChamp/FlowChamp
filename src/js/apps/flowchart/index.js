@@ -11,13 +11,18 @@ const FlowchartContainer = styled.div`
 `;
 
 class Flowchart extends Component {
-   state = {
-      data: [],
-   };
+   constructor(props) {
+      super(props);
+      this.state = {
+         data: [],
+         fetching: props.flowchart.fetching
+      };
+   }
 
    static getDerivedStateFromProps(nextProps, prevState) {
       const { flowchart } = nextProps;
       return {
+         fetching: flowchart.fetching,
          data: flowchart.chartData,
       };
    }
@@ -31,13 +36,13 @@ class Flowchart extends Component {
    };
 
    render() {
-      const { data } = this.state;
-      const { auth, sidebar } = this.props;
+      const { fetching, data } = this.state;
+      const { sidebar } = this.props;
 
       return (
          <FlowchartContainer>
-            <LoadingCover shift={sidebar.isOpen} isOpen={auth.changingChart} />
-            <Board hide={auth.changingChart} data={data} />
+            <LoadingCover shift={sidebar.isOpen} isOpen={fetching} />
+            <Board hide={fetching} data={data} />
          </FlowchartContainer>
       );
    }

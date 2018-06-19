@@ -128,7 +128,7 @@ class ChartNamerView extends Component {
                   placeholder="Chart name"
                   onChange={this.handleChange}
                />
-               <Submitter label="Save chart" submitted={auth.addingChart} />
+               <Submitter label="Save chart" submitted={auth.updatingConfig} />
                <ErrorText>{auth.error}</ErrorText>
             </Form>
          </Container>

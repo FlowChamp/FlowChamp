@@ -19,6 +19,7 @@ const Logo = styled.img`
 `;
 
 const Container = styled.div`
+   z-index: 99;
    position: fixed;
    top: 0;
    left: 0;

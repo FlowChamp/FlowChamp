@@ -34,14 +34,16 @@ const ButtonContainer = styled.div`
    display: flex;
    justify-content: space-between;
    align-items: center;
-   min-height: 4em;
+   height: ${props => (props.hide ? 0 : null)};
+   min-height: ${props => (props.hide ? 0 : '4em')};
    transition: all 0.15s ease;
    border-left: 8px solid
       ${props => (props.isActive ? color.blue[3] : 'transparent')};
    border-bottom: ${props =>
-      props.noBorder ? 'none' : '1px solid ' + color.gray[3]};
+      props.noBorder || props.hide ? 'none' : '1px solid ' + color.gray[3]};
    cursor: pointer;
    overflow: auto;
+   opacity: ${props => (props.hide ? 0 : 1)};
 
    svg {
       margin: auto;
@@ -95,7 +97,10 @@ const DeleteContainer = styled.div`
 `;
 
 const mapStateToProps = state => {
-   return { auth: state.auth };
+   return {
+      flowchart: state.flowchart,
+      auth: state.auth,
+   };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -108,12 +113,24 @@ const mapDispatchToProps = dispatch => {
 
 class ChartSelector extends Component {
    state = {
-      loading: {},
+      deleting: {},
+      loading: '',
    };
 
    static getDerivedStateFromProps(nextProps, prevState) {
+      const { deleting, loading } = prevState;
+      const { config } = nextProps.auth;
+
+      let newDeleting = nextProps.auth.updatingConfig ? deleting : {};
+      const newLoading =
+         !nextProps.flowchart.fetching &&
+         (config && config.active_chart === loading)
+            ? loading
+            : '';
+
       return {
-         loading: {},
+         deleting: newDeleting,
+         loading: newLoading,
       };
    }
 
@@ -131,10 +148,10 @@ class ChartSelector extends Component {
    setActive = (config, name) => {
       this.props.setActiveChart(config, name);
       this.setState(state => {
-         if (state.loading[name]) {
+         if (state.deleting[name]) {
             return state;
          }
-         state.loading[name] = true;
+         state.loading = name;
          return state;
       });
    };
@@ -148,17 +165,14 @@ class ChartSelector extends Component {
       this.props.deleteChart(config, name);
 
       this.setState(state => {
-         if (state.loading[name]) {
-            return state;
-         }
-         state.loading[name] = true;
+         state.deleting[name] = true;
          return state;
       });
    }
 
    getUserCharts = () => {
       const { auth } = this.props;
-      const { loading } = this.state;
+      const { loading, deleting } = this.state;
       const { config } = auth;
 
       if (!config || !auth.loggedIn) return;
@@ -174,13 +188,14 @@ class ChartSelector extends Component {
             <ButtonContainer
                key={name}
                isActive={isActive}
+               hide={deleting[name]}
                onClick={isActive ? null : () => this.setActive(config, name)}>
                <TextContainer>
                   <Title>{name}</Title>
                   <Subtitle>{subtitle}</Subtitle>
                </TextContainer>
                <DeleteContainer onClick={e => this.deleteChart(e, name)}>
-                  {loading[name] ? <Loader size="small" /> : <X />}
+                  {loading === name ? <Loader size="small" /> : <X />}
                </DeleteContainer>
             </ButtonContainer>,
          );

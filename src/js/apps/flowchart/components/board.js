@@ -44,7 +44,7 @@ class Board extends Component {
    };
 
    render = () => {
-      const { data, auth } = this.props;
+      const { data, hide } = this.props;
       const boardId = 'active_chart';
 
       return (
@@ -55,7 +55,7 @@ class Board extends Component {
                direction="horizontal">
                {provided => (
                   <YearContainer
-                     hide={auth.changingChart}
+                     hide={hide}
                      ref={provided.innerRef}>
                      {data &&
                         data.map((year, index) => (
@@ -75,8 +75,4 @@ class Board extends Component {
    };
 }
 
-const mapStateToProps = state => ({
-   auth: state.auth,
-});
-
-export default connect(mapStateToProps)(Board);
+export default connect()(Board);

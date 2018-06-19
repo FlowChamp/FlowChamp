@@ -219,25 +219,25 @@ export const addChart = ({ config, name, major }) => {
 export const deleteChart = (config, name) => {
    return dispatch => {
       const user = new UserManager(config);
+
       dispatch(
          dispatch({
             type: DELETE_CHART_REQUEST,
-         }),
-         dispatch({
-            type: SET_ACTIVE_CHART_REQUEST,
          }),
       );
 
       return user
          .deleteChart(name)
          .then(newConfig => {
-            if (newConfig.active_chart) {
-               fetchActiveChart(user, newConfig, dispatch);
-            } else {
+            if (!newConfig.active_chart) {
                dispatch({
                   type: 'GET_ACTIVE_CHART_SUCCESS',
                   chartData: null,
                });
+            } else if (
+               newConfig.active_chart !== config.active_chart
+            ) {
+               fetchActiveChart(user, newConfig, dispatch);
             }
             dispatch({
                type: DELETE_CHART_SUCCESS,

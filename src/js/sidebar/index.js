@@ -12,7 +12,7 @@ import { constants } from '../toolbox';
 const { color } = constants;
 
 const Container = styled.div`
-   z-index: 30;
+   z-index: 100;
    position: fixed;
    top: 3.5em;
    bottom: 0;

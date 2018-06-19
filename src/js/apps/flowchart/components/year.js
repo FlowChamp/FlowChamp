@@ -11,7 +11,7 @@ const YearContainer = styled.div`
    @keyframes slideAppear {
       0% {
          opacity: 0;
-         transform: scale(0.8) translateX(10%);
+         transform: translateX(10%);
       }
    }
 `;

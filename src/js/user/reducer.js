@@ -19,7 +19,7 @@ const initialState = {
    loggedIn: false,
    loggingIn: false,
    loggingOut: false,
-   changingChart: false,
+   updatingConfig: false,
    credentials: null,
    error: null,
    config: null,
@@ -77,10 +77,11 @@ const authReducer = (state = initialState, action) => {
          });
       case SET_ACTIVE_CHART_REQUEST:
          return Object.assign({}, state, {
-            changingChart: true,
+            updatingConfig: true,
          });
       case SET_ACTIVE_CHART_SUCCESS:
          return Object.assign({}, state, {
+            updatingConfig: false,
             config: {
                ...state.config,
                active_chart: action.active_chart
@@ -88,17 +89,17 @@ const authReducer = (state = initialState, action) => {
       });
       case ADD_CHART_REQUEST:
          return Object.assign({}, state, {
-            changingChart: true,
+            updatingConfig: true,
             error: null,
          });
       case ADD_CHART_SUCCESS:
          return Object.assign({}, state, {
-            changingChart: false,
+            updatingConfig: false,
             config: action.config,
       });
       case ADD_CHART_FAILURE:
          return Object.assign({}, state, {
-            changingChart: false,
+            updatingConfig: false,
             error: action.error
          });
       case DELETE_CHART_SUCCESS:

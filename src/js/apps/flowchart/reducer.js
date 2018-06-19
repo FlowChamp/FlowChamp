@@ -1,10 +1,6 @@
 import {
-   STOCK_CHART_REQUEST,
    STOCK_CHART_SUCCESS,
    STOCK_CHART_FAILURE,
-   ACTIVE_CHART_REQUEST,
-   ACTIVE_CHART_SUCCESS,
-   ACTIVE_CHART_FAILURE,
    GET_ACTIVE_CHART_REQUEST,
    GET_ACTIVE_CHART_SUCCESS,
    GET_ACTIVE_CHART_FAILURE,
@@ -20,46 +16,33 @@ const initialState = {
 
 const flowchartReducer = (state = initialState, action) => {
    switch (action.type) {
-      case STOCK_CHART_REQUEST:
-         return Object.assign({}, ...state, {
-            fetching: true,
-         });
       case STOCK_CHART_SUCCESS:
-         return Object.assign({}, ...state, {
-            fetching: false,
-            stockCharts: action.stockCharts,
-         });
+         return {
+            ...state,
+            stockCharts: action.stockCharts
+         }
       case STOCK_CHART_FAILURE:
          return Object.assign({}, ...state, {
-            fetching: false,
-            error: action.error,
-         });
-      case ACTIVE_CHART_REQUEST:
-         return Object.assign({}, ...state, {
-            fetchingChart: true,
-         });
-      case ACTIVE_CHART_SUCCESS:
-         return Object.assign({}, ...state, {
-            fetchingChart: false,
-            data: action.chartData,
-         });
-      case ACTIVE_CHART_FAILURE:
-         return Object.assign({}, ...state, {
-            fetchingChart: false,
             error: action.error,
          });
       case GET_ACTIVE_CHART_REQUEST:
          return Object.assign({}, state, {
-            changingChart: true,
+            fetching: true
          });
+      case 'LOGOUT_SUCCESS':
+         return {
+            ...state,
+            fetching: false,
+            chartData: null
+         }
       case GET_ACTIVE_CHART_SUCCESS:
          return Object.assign({}, state, {
-            changingChart: false,
+            fetching: false,
             chartData: action.chartData,
          });
       case GET_ACTIVE_CHART_FAILURE:
          return Object.assign({}, state, {
-            changingChart: false,
+            fetching: false,
          });
       case 'MOVE_CARD': {
          const years = { Freshman: 0, Sophomore: 1, Junior: 2, Senior: 3 };
@@ -71,7 +54,7 @@ const flowchartReducer = (state = initialState, action) => {
             destListId,
          } = action.payload;
          const sourceListSplit = sourceListId.split('-');
-         const destListSplit = destListId.split('-');
+         //const destListSplit = destListId.split('-');
          const sourceYear = years[sourceListSplit[1]];
          const sourceSeason = seasons[sourceListSplit[0]];
          // Move within the same list
