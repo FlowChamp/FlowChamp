@@ -17,7 +17,7 @@ const YearContainer = styled.div`
 `;
 
 const Title = styled.h2`
-   font-weight: 300;
+   font-weight: 200;
    font-size: 1.8em;
    margin: 8px 4px;
    color: #4f4f4f;

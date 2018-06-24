@@ -11,7 +11,6 @@ const Container = styled.div`
 `;
 
 const Label = styled.h2`
-   font-family: "SF Pro Display";
    font-weight: normal;
    font-size: 1.25rem;
    flex: 1;

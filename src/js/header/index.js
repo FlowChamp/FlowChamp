@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import HamburgerMenu from 'react-hamburger-menu';
 import { ArrowLeft } from 'react-feather';
 import styled from 'styled-components';
-import { toggleSidebar, newSidebarView, oldSidebarView } from '../sidebar/actions';
+import {
+   toggleSidebar,
+   newSidebarView,
+   oldSidebarView,
+} from '../sidebar/actions';
 import { logOut } from '../user/actions';
 import { constants } from '../toolbox';
 
@@ -35,8 +39,7 @@ const Container = styled.div`
 `;
 
 const TextButton = styled.h3`
-   font-family: 'SF Pro Display';
-   font-weight: normal;
+   font-weight: 300;
    cursor: pointer;
 `;
 
@@ -96,6 +99,7 @@ const MenuButton = ({ isOpen, menuClicked }) => {
 const mapStateToProps = state => {
    return {
       auth: state.auth,
+      flowchart: state.flowchart,
       sidebar: state.sidebar,
    };
 };
@@ -138,10 +142,12 @@ class Header extends Component {
    };
 
    render() {
-      const { auth, sidebar } = this.props;
+      const { auth, flowchart, sidebar } = this.props;
       const { loggedIn } = auth;
       const { viewStack } = sidebar;
       const onMainView = viewStack.length === 1;
+      const chartName = (flowchart.fetching || auth.updatingConfig) ? 'Loading...' :
+         (auth.config && auth.config.active_chart) ? auth.config.active_chart : 'Welcome';
 
       return (
          <Container>
@@ -154,7 +160,9 @@ class Header extends Component {
                </BackButtonContainer>
                <Logo hidden={sidebar.isOpen} src="images/icons/logo_text.svg" />
             </SectionContainer>
-            <SectionContainer justifyContent="center" />
+            <SectionContainer justifyContent="center">
+               <h3>{chartName}</h3>
+            </SectionContainer>
             <SectionContainer justifyContent="flex-end">
                {loggedIn ? (
                   <TextButton onClick={this.logOut}>Log Out</TextButton>

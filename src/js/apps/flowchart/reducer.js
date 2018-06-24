@@ -19,22 +19,22 @@ const flowchartReducer = (state = initialState, action) => {
       case STOCK_CHART_SUCCESS:
          return {
             ...state,
-            stockCharts: action.stockCharts
-         }
+            stockCharts: action.stockCharts,
+         };
       case STOCK_CHART_FAILURE:
          return Object.assign({}, ...state, {
             error: action.error,
          });
       case GET_ACTIVE_CHART_REQUEST:
          return Object.assign({}, state, {
-            fetching: true
+            fetching: true,
          });
       case 'LOGOUT_SUCCESS':
          return {
             ...state,
             fetching: false,
-            chartData: null
-         }
+            chartData: null,
+         };
       case GET_ACTIVE_CHART_SUCCESS:
          return Object.assign({}, state, {
             fetching: false,
@@ -53,8 +53,17 @@ const flowchartReducer = (state = initialState, action) => {
             sourceListId,
             destListId,
          } = action.payload;
+         console.log(
+            'oldCardIndex:',
+            oldCardIndex,
+            'newCardIndex:',
+            newCardIndex,
+            'SourceListId: ',
+            sourceListId,
+            'destListId:',
+            destListId,
+         );
          const sourceListSplit = sourceListId.split('-');
-         //const destListSplit = destListId.split('-');
          const sourceYear = years[sourceListSplit[1]];
          const sourceSeason = seasons[sourceListSplit[0]];
          // Move within the same list
@@ -62,16 +71,21 @@ const flowchartReducer = (state = initialState, action) => {
             const newCards = Array.from(
                state.chartData[sourceYear].quarters[sourceSeason],
             );
+            // Card being moved
             const [removedCard] = newCards.splice(oldCardIndex, 1);
             newCards.splice(newCardIndex, 0, removedCard);
-            let newChartData = state.chartData;
-            newChartData[sourceYear].quarters[sourceSeason] = newCards;
-            return {
+/*
+            let result = {
                ...state,
-               chartData: newChartData
-            };
+               chartData: [
+                  ...state.chartData,
+                  [sourceListId]: { ...state.chartData[sourceListId], newCards }
+               ]
+               };
+            console.log(state.chartData,result.chartData);
+              */
          }
-         break;
+         return state;
          /*
          // Move card from one list to another
          const sourceCards = Array.from(state[sourceListId].cards);

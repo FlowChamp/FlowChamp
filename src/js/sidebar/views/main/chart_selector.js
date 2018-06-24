@@ -15,7 +15,7 @@ const Container = styled.div`
 
 const Header = styled.div`
    font-family: "SF Pro Display";
-   font-weight: normal;
+   font-weight: 300;
    font-size: 1.25rem;
    padding: 1em;
    border-bottom: 1px solid ${color.gray[3]};

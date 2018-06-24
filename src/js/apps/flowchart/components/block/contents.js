@@ -8,11 +8,11 @@ const ContentContainer = styled.div`
    display: flex;
    flex-direction: column;
    border-radius: 4px;
-   height: 8em;
+   height: 115px;
    width: 8.5em;
    background: ${props => color[props.color] || 'dodgerblue'};
    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
-   padding: 15px;
+   padding: 20px 15px;
 
    &:hover {
       box-shadow: 0 4px 9px rgba(0, 0, 0, 0.2);
@@ -21,22 +21,26 @@ const ContentContainer = styled.div`
 
 const Header = styled.h3`
    margin: 0;
+   font-weight: bold;
 `;
 
 const Body = styled.div`
    display: flex;
-   align-items: center;
+   align-items: flex-start;
    flex: 1;
+   overflow: auto;
+   padding-bottom: 5px;
 `;
 
 const CourseTitle = styled.h4`
    margin: 0;
    padding: 5px 0;
-   font-weight: normal;
+   font-weight: 300;
 `;
 
 const UnitCount = styled.h4`
    margin: 0;
+   font-weight: normal;
 `;
 
 const BlockContents = ({ data }) => {

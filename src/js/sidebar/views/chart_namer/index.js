@@ -33,7 +33,6 @@ const Form = styled.form`
 `;
 
 const ErrorText = styled.h3`
-   font-family: 'SF Pro Display';
    font-weight: normal;
    color: red;
    animation: fadeIn 0.15s ease;

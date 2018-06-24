@@ -1,11 +1,43 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import styled, { injectGlobal } from 'styled-components';
 import Header from './header/index';
 import Sidebar from './sidebar/index';
 import Flowchart from './apps/flowchart/index';
 import { constants } from './toolbox';
 import { fetchUserConfig } from './user/actions';
+
+injectGlobal`
+   @font-face {
+      font-family: 'SF Pro Display';
+      font-weight: bold;
+      src: url('fonts/SF-Pro-Display-Bold.otf');
+   }
+   @font-face {
+      font-family: 'SF Pro Display';
+      font-weight: normal;
+      src: url('fonts/SF-Pro-Display-Medium.otf');
+   }
+   @font-face {
+      font-family: 'SF Pro Display';
+      font-weight: 300;
+      src: url('fonts/SF-Pro-Display-Light.otf');
+   }
+   @font-face {
+      font-family: 'SF Pro Display';
+      font-weight: 200;
+      src: url('fonts/SF-Pro-Display-Thin.otf');
+   }
+   @font-face {
+      font-family: 'SF Pro Display';
+      font-weight: 100;
+      src: url('fonts/SF-Pro-Display-Ultralight.otf');
+   }
+
+   html {
+      font-family: 'SF Pro Display', 'sans-serif';
+   }
+`;
 
 const { animation } = constants;
 
@@ -19,7 +51,7 @@ const AppContainer = styled.div`
 `;
 
 const AppCover = styled.div`
-   z-index: 10;
+   z-index: 98;
    position: fixed;
    display: ${props => props.isOpen ? 'block' : 'none'};
    top: 0;

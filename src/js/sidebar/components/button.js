@@ -34,7 +34,6 @@ const icons = {
 };
 
 const Label = styled.h3`
-   font-family: 'SF Pro Display';
    font-weight: normal;
    margin: 0;
 `;
