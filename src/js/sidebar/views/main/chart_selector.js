@@ -136,12 +136,18 @@ class ChartSelector extends Component {
 
    newChart = () => {
       const { auth } = this.props;
+      const { config } = auth;
       const { loggedIn } = auth;
 
       this.props.newSidebarView({
-         name: loggedIn ? 'chartSelect' : 'login',
-         props: {},
-         route: loggedIn ? null : 'chartSelect',
+         name: loggedIn
+            ? config.start_year
+               ? 'chartSelect'
+               : 'yearSelect'
+            : 'login',
+         props: {
+            route: loggedIn && config.start_year ? null : 'chartSelect',
+         },
       });
    };
 

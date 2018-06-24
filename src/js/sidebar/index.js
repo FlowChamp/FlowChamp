@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import MainView from './views/main/index';
 import LoginView from './views/login/index';
 import ChartSelectView from './views/chart_select/index';
+import YearSelectView from './views/year_select/index';
 import ChartNamerView from './views/chart_namer/index';
 import { constants } from '../toolbox';
 
@@ -56,6 +57,7 @@ const views = {
    main: <MainView />,
    login: <LoginView />,
    chartSelect: <ChartSelectView />,
+   yearSelect: <YearSelectView />,
    chartNamer: <ChartNamerView />,
 };
 

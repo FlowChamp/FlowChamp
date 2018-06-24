@@ -127,6 +127,10 @@ export default class UserManager {
                      reject(data.message);
                   }
                   resolve(data);
+               })
+               .catch(e => {
+                  console.error("JSON Parse Error. Response: ");
+                  console.log(response);
                });
             })
             .catch(e => {

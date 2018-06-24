@@ -108,6 +108,9 @@ export const fetchUserConfig = prevConfig => {
 };
 
 const fetchActiveChart = (user, config, dispatch) => {
+   if (!config.active_chart) {
+      return;
+   }
    dispatch({
       type: 'GET_ACTIVE_CHART_REQUEST',
    });
@@ -183,6 +186,35 @@ export const setActiveChart = (config, name) => {
          .catch(error => {
             dispatch({
                type: SET_ACTIVE_CHART_FAILURE,
+               error,
+            });
+         });
+   };
+};
+
+/* SET START YEAR */
+export const setStartYear = (config, year) => {
+   const user = new UserManager(config);
+   let newConfig = config;
+
+   newConfig.start_year = year;
+
+   return dispatch => {
+      dispatch({
+         type: 'UPDATE_CONFIG_REQUEST',
+      });
+
+      return user
+         .updateConfig(newConfig)
+         .then(() => {
+            dispatch({
+               type: 'UPDATE_CONFIG_SUCCESS',
+               config: newConfig
+            });
+         })
+         .catch(error => {
+            dispatch({
+               type: 'UPDATE_CONFIG_FAILURE',
                error,
             });
          });

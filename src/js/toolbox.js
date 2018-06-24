@@ -109,7 +109,6 @@ const ButtonContainer = styled.div`
    margin: 8px 0;
 
    h3 {
-      font-family: 'SF Pro Display';
       font-weight: normal;
    }
 `;
