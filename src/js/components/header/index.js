@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import HamburgerMenu from 'react-hamburger-menu';
 import { ArrowLeft } from 'react-feather';
 import styled from 'styled-components';
 import {
@@ -9,7 +8,7 @@ import {
    popView,
 } from '../../components/sidebar/actions';
 import { logOut } from '../../user/actions';
-import { constants } from '../../toolbox/';
+import { constants, Hamburger } from '../../toolbox/';
 
 const { color, animation } = constants;
 const { fadeIn } = animation;
@@ -85,7 +84,7 @@ const BackButtonContainer = styled.div`
 
 const MenuButton = ({ isOpen, menuClicked }) => {
    return (
-      <HamburgerMenu
+      <Hamburger
          height={15}
          width={24}
          borderRadius={8}

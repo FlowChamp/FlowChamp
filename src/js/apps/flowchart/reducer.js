@@ -36,6 +36,11 @@ const flowchartReducer = (state = initialState, action) => {
             fetching: false,
             chartData: null,
          };
+      case 'FETCH_ACTIVE_CHART_REQUEST':
+         return {
+            ...state,
+            fetching: true,
+         };
       case GET_ACTIVE_CHART_SUCCESS:
          return Object.assign({}, state, {
             fetching: false,
@@ -48,8 +53,8 @@ const flowchartReducer = (state = initialState, action) => {
       case 'MOVE_BLOCK':
          return {
             ...state,
-            chartData: action.chartData
-         }
+            chartData: action.chartData,
+         };
       default:
          return state;
    }

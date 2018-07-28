@@ -1,19 +1,44 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Draggable } from 'react-beautiful-dnd';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import BlockContents from './contents';
 
 const OuterContainer = styled.div`
    position: relative;
    margin: 8px 5px;
    box-sizing: border-box;
-   transition: box-shadow 0.15s;
+   transition: all 0.15s ease;
+   animation: slideReveal 0.5s ease;
+
+   ${props => props.isHidden && css`
+      transform: translateX(-20%);
+      opacity: 0;
+      pointer-events: none;
+   `}
+
+   @keyframes slideReveal {
+      0% {
+         opacity: 0;
+         transform: translateX(20%);
+      }
+   }
+
+   @keyframes slideLeave {
+      100% {
+         opacity: 0;
+         transform: translateX(-20%);
+      }
+   }
 `;
 
-const BlockContainer = styled.div`
+const BlockContainer = styled.div``;
 
-`;
+const mapStateToProps = state => {
+   return {
+      flowchart: state.flowchart
+   }
+}
 
 class Block extends Component {
    toggleCardEditor = () => {
@@ -33,11 +58,19 @@ class Block extends Component {
    };
 
    render() {
-      const { blockId, index, data, isDraggingOver } = this.props;
+      const {
+         flowchart,
+         blockId,
+         index,
+         data,
+         isDraggingOver,
+      } = this.props;
+      const { fetching } = flowchart;
+
       return (
          <Draggable draggableId={blockId} index={index}>
             {(provided, snapshot) => (
-               <OuterContainer>
+               <OuterContainer isHidden={fetching}>
                   {/* eslint-disable */}
                   <div
                      ref={ref => {
@@ -57,7 +90,7 @@ class Block extends Component {
                      style={{
                         ...provided.draggableProps.style,
                      }}>
-                     <BlockContainer >
+                     <BlockContainer>
                         <BlockContents data={data} />
                      </BlockContainer>
                   </div>
@@ -70,4 +103,4 @@ class Block extends Component {
    }
 }
 
-export default connect()(Block);
+export default connect(mapStateToProps)(Block);

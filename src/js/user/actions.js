@@ -184,6 +184,9 @@ export const setActiveChart = (config, name) => {
          type: SET_ACTIVE_CHART_REQUEST,
          name,
       });
+      dispatch({
+         type: 'FETCH_ACTIVE_CHART_REQUEST',
+      });
 
       return user
          .updateConfig(newConfig)
