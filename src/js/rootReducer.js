@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { devToolsEnhancer } from 'redux-devtools-extension';
-import sidebarReducer from './sidebar/reducer';
+import sidebarReducer from './components/sidebar/reducer';
 import userReducer from './user/reducer';
 import flowchartReducer from './apps/flowchart/reducer';
 

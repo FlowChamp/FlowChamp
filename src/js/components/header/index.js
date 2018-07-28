@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import HamburgerMenu from 'react-hamburger-menu';
 import { ArrowLeft } from 'react-feather';
 import styled from 'styled-components';
-import { toggleSidebar, pushView, popView } from '../../sidebar/actions';
+import {
+   toggleSidebar,
+   pushView,
+   popView,
+} from '../../components/sidebar/actions';
 import { logOut } from '../../user/actions';
 import { constants } from '../../toolbox';
 
