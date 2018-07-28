@@ -89,7 +89,6 @@ const Input = styled.input`
    font-size: 1rem;
    outline: none;
    border: none;
-   transition: all 0.15s ease;
    box-shadow: ${props =>
       inputs.includes(props.type) ? 'inset 0 -1px 0 0 #9e9e9e' : 'none'};
 
@@ -109,7 +108,6 @@ const ButtonContainer = styled.div`
    margin: 8px 0;
 
    h3 {
-      font-family: 'SF Pro Display';
       font-weight: normal;
    }
 `;

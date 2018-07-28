@@ -21,11 +21,10 @@ const initialState = {
    loggingOut: false,
    updatingConfig: false,
    credentials: null,
-   error: null,
    config: null,
 };
 
-const authReducer = (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
    switch (action.type) {
       case LOGIN_REQUEST:
          return Object.assign({}, state, {
@@ -38,17 +37,15 @@ const authReducer = (state = initialState, action) => {
             loggingIn: false,
             loggedIn: true,
             config: action.config,
-      });
+         });
       case LOGIN_FAILURE:
          return Object.assign({}, state, {
             loggingIn: false,
-            error: action.error,
             credentials: null,
          });
       case LOGOUT_REQUEST:
          return Object.assign({}, state, {
             loggingOut: true,
-            error: null,
             config: action.config,
          });
       case LOGOUT_SUCCESS:
@@ -61,20 +58,25 @@ const authReducer = (state = initialState, action) => {
       case USER_CONFIG_REQUEST:
          return Object.assign({}, state, {
             loggingIn: true,
-            error: null,
-            config: action.config
+            config: action.config,
          });
       case USER_CONFIG_SUCCESS:
          return Object.assign({}, state, {
             loggingIn: false,
             loggedIn: true,
             config: action.config,
-      });
+         });
       case USER_CONFIG_FAILURE:
          return Object.assign({}, state, {
             loggingIn: false,
             loggedIn: false,
          });
+      case 'UPDATE_CONFIG_SUCCESS':
+         console.log(action.config);
+         return {
+            ...state,
+            config: action.config,
+         };
       case SET_ACTIVE_CHART_REQUEST:
          return Object.assign({}, state, {
             updatingConfig: true,
@@ -84,31 +86,29 @@ const authReducer = (state = initialState, action) => {
             updatingConfig: false,
             config: {
                ...state.config,
-               active_chart: action.active_chart
-            }
-      });
+               active_chart: action.active_chart,
+            },
+         });
       case ADD_CHART_REQUEST:
          return Object.assign({}, state, {
             updatingConfig: true,
-            error: null,
          });
       case ADD_CHART_SUCCESS:
          return Object.assign({}, state, {
             updatingConfig: false,
             config: action.config,
-      });
+         });
       case ADD_CHART_FAILURE:
          return Object.assign({}, state, {
             updatingConfig: false,
-            error: action.error
          });
       case DELETE_CHART_SUCCESS:
          return Object.assign({}, state, {
             config: action.config,
-      });
+         });
       default:
          return state;
    }
 };
 
-export default authReducer;
+export default userReducer;

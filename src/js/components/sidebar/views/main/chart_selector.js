@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Plus, X } from 'react-feather';
-import { newSidebarView } from '../../actions';
-import { setActiveChart, deleteChart } from '../../../user/actions';
-import { Loader, constants } from '../../../toolbox';
+import { pushView } from '../../actions';
+import { setActiveChart, deleteChart } from '../../../../user/actions';
+import { Loader, constants } from '../../../../toolbox';
 
 const { color } = constants;
 
@@ -15,7 +15,7 @@ const Container = styled.div`
 
 const Header = styled.div`
    font-family: "SF Pro Display";
-   font-weight: normal;
+   font-weight: 300;
    font-size: 1.25rem;
    padding: 1em;
    border-bottom: 1px solid ${color.gray[3]};
@@ -99,13 +99,13 @@ const DeleteContainer = styled.div`
 const mapStateToProps = state => {
    return {
       flowchart: state.flowchart,
-      auth: state.auth,
+      user: state.user,
    };
 };
 
 const mapDispatchToProps = dispatch => {
    return {
-      newSidebarView: view => dispatch(newSidebarView(view)),
+      pushView: view => dispatch(pushView(view)),
       setActiveChart: (config, name) => dispatch(setActiveChart(config, name)),
       deleteChart: (config, name) => dispatch(deleteChart(config, name)),
    };
@@ -119,9 +119,9 @@ class ChartSelector extends Component {
 
    static getDerivedStateFromProps(nextProps, prevState) {
       const { deleting, loading } = prevState;
-      const { config } = nextProps.auth;
+      const { config } = nextProps.user;
 
-      let newDeleting = nextProps.auth.updatingConfig ? deleting : {};
+      let newDeleting = nextProps.user.updatingConfig ? deleting : {};
       const newLoading =
          !nextProps.flowchart.fetching &&
          (config && config.active_chart === loading)
@@ -135,14 +135,22 @@ class ChartSelector extends Component {
    }
 
    newChart = () => {
-      const { auth } = this.props;
-      const { loggedIn } = auth;
+      const { user } = this.props;
+      const { config } = user;
+      const { loggedIn } = user;
 
-      this.props.newSidebarView({
-         name: loggedIn ? 'chartSelect' : 'login',
-         props: {},
-         route: loggedIn ? null : 'chartSelect',
-      });
+      const view = {
+         name: loggedIn
+            ? config.start_year
+               ? 'chartSelect'
+               : 'yearSelect'
+            : 'login',
+         props: {
+            route: loggedIn && config.start_year ? null : 'chartSelect',
+         },
+      };
+
+      this.props.pushView(view);
    };
 
    setActive = (config, name) => {
@@ -159,8 +167,8 @@ class ChartSelector extends Component {
    deleteChart(e, name) {
       e.stopPropagation();
 
-      const { auth } = this.props;
-      const { config } = auth;
+      const { user } = this.props;
+      const { config } = user;
 
       this.props.deleteChart(config, name);
 
@@ -171,11 +179,11 @@ class ChartSelector extends Component {
    }
 
    getUserCharts = () => {
-      const { auth } = this.props;
+      const { user } = this.props;
       const { loading, deleting } = this.state;
-      const { config } = auth;
+      const { config } = user;
 
-      if (!config || !auth.loggedIn) return;
+      if (!config || !user.loggedIn) return;
       const { charts, active_chart } = config;
       const chartButtons = [];
 

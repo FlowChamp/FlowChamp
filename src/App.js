@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FlowChamp from './js/flowchamp';
+import FlowChamp from './js/';
 
 class App extends Component {
    render() {

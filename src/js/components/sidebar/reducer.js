@@ -7,6 +7,12 @@ import {
 
 const initialState = {
    isOpen: false,
+   stack: [
+      {
+         name: 'main',
+         props: {},
+      },
+   ],
    viewStack: [{ name: 'main', props: {} }],
 };
 
@@ -17,6 +23,21 @@ const sidebarReducer = (state = initialState, action) => {
             ...state,
             isOpen: action.value,
          };
+      case 'PUSH_VIEW':
+         return {
+            ...state,
+            stack: [...state.stack, action.view],
+         };
+      case 'POP_VIEW':
+         return {
+            ...state,
+            stack: state.stack.slice(0, state.stack.length - 1),
+         };
+      case 'EMPTY_VIEWS':
+         return {
+            ...state,
+            stack: state.stack.slice(0, 1),
+         }
       case NEW_SIDEBAR_VIEW:
          const popStack = action.view.popStack || false;
          const len = state.viewStack.length;

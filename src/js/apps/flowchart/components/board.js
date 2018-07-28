@@ -1,78 +1,96 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { moveBlock } from '../actions';
+import { DragDropContext } from 'react-beautiful-dnd';
 import Year from './year';
 
 const YearContainer = styled.div`
-   display: ${props => props.hide ? 'none' : 'flex'};
+   display: ${props => (props.hide ? 'none' : 'flex')};
+   animation: fadeIn 0.5s ease;
+
+   @keyframes fadeIn {
+      0% {
+         opacity: 0;
+      }
+   }
 `;
 
 class Board extends Component {
    constructor(props) {
       super(props);
       this.state = {
+         data: props.data,
          startX: null,
          startScrollX: null,
       };
    }
 
+   static getDerivedStateFromProps(nextProps, prevState) {
+      return {
+         data: nextProps.data,
+      };
+   }
+
    handleDragEnd = ({ source, destination, type }) => {
-      console.log("HERE");
+      const { data } = this.props;
+
       // dropped outside the list
       if (!destination) {
-         return;
+         return null;
       }
-      const { dispatch, boardId } = this.props;
+      const { boardId } = this.props;
 
       // Move card
       if (
          source.index !== destination.index ||
          source.droppableId !== destination.droppableId
       ) {
-         dispatch({
-            type: 'MOVE_CARD',
-            payload: {
-               sourceListId: source.droppableId,
-               destListId: destination.droppableId,
-               oldCardIndex: source.index,
-               newCardIndex: destination.index,
-               boardId,
-            },
+         this.props.moveBlock({
+            chartData: data,
+            sourceQuarterId: source.droppableId,
+            destQuarterId: destination.droppableId,
+            oldBlockIndex: source.index,
+            newBlockIndex: destination.index,
+            boardId,
          });
       }
    };
 
    render = () => {
-      const { data, hide } = this.props;
+      const { user } = this.props;
+      const { data } = this.state;
+      const { config } = user;
+      if (!config) return null;
+
       const boardId = 'active_chart';
 
       return (
-         <DragDropContext onDragEnd={this.handleDragEnd}>
-            <Droppable
-               droppableId="BoardID"
-               type="COLUMN"
-               direction="horizontal">
-               {provided => (
-                  <YearContainer
-                     hide={hide}
-                     ref={provided.innerRef}>
-                     {data &&
-                        data.map((year, index) => (
-                           <Year
-                              year={year}
-                              boardId={boardId}
-                              index={index}
-                              key={year._id}
-                           />
-                        ))}
-                     {provided.placeholder}
-                  </YearContainer>
-               )}
-            </Droppable>
-         </DragDropContext>
+         data && (
+            <DragDropContext onDragEnd={this.handleDragEnd}>
+               <YearContainer>
+                  {data &&
+                     data.map((year, index) => (
+                        <Year
+                           year={year}
+                           boardId={boardId}
+                           index={index}
+                           key={year._id}
+                        />
+                     ))}
+               </YearContainer>
+            </DragDropContext>
+         )
       );
    };
 }
 
-export default connect()(Board);
+const mapStateToProps = state => ({
+   user: state.user,
+});
+
+const mapDispatchToProps = dispatch => ({
+   moveBlock: coords => dispatch(moveBlock(coords)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

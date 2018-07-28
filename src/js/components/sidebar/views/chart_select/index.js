@@ -1,33 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { fetchStockCharts } from '../../../apps/flowchart/actions';
-import { newSidebarView } from '../../actions';
+import { fetchStockCharts } from '../../../../apps/flowchart/actions';
+import { pushView } from '../../actions';
 import Button from '../../components/button';
 import Header from '../../components/header';
-import { Loader, constants } from '../../../toolbox';
-
-const { animation } = constants;
-const {
-   oldViewEntering,
-   oldViewExiting,
-   slideInRight,
-   slideInLeft,
-} = animation;
-const duration = '0.25s';
+import { Loader } from '../../../../toolbox';
 
 const Container = styled.div`
    flex: 1;
-   animation: ${props => (props.isPrevView ? slideInLeft : slideInRight)}
-      ${duration};
-   ${props => (props.enteringNewView ? oldViewExiting : null)};
-   ${props => (props.enteringOldView ? oldViewEntering : null)};
    overflow: auto;
 `;
 
 const mapStateToProps = state => {
    return {
-      auth: state.auth,
+      user: state.user,
       flowchart: state.flowchart,
    };
 };
@@ -35,13 +22,13 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
    return {
       fetchStockCharts: () => dispatch(fetchStockCharts()),
-      newSidebarView: view => dispatch(newSidebarView(view)),
+      pushView: view => dispatch(pushView(view)),
    };
 };
 
 class ChartSelectView extends Component {
    selectChart = major => {
-      this.props.newSidebarView({
+      this.props.pushView({
          name: 'chartNamer',
          props: {
             major,
@@ -54,7 +41,7 @@ class ChartSelectView extends Component {
       const { stockCharts } = flowchart;
 
       if (!stockCharts) {
-         return <Loader alignment="center"/>
+         return <Loader alignment="center" />;
       }
       return stockCharts.map((chart, index) => {
          const major = Object.keys(chart)[0];
@@ -75,18 +62,18 @@ class ChartSelectView extends Component {
    handleClick = options => {};
 
    componentDidMount() {
-      this.props.fetchStockCharts();
+      const { flowchart } = this.props;
+      const { stockCharts } = flowchart;
+
+      if (stockCharts.length === 0) {
+         this.props.fetchStockCharts();
+      }
    }
 
    render() {
-      const { isPrevView, enteringNewView, enteringOldView } = this.props;
-
       return (
-         <Container
-            isPrevView={isPrevView}
-            enteringNewView={enteringNewView}
-            enteringOldView={enteringOldView}>
-            <Header label="New Flowchart"/>
+         <Container>
+            <Header label="New Flowchart" />
             {this.getChartButtons()}
          </Container>
       );

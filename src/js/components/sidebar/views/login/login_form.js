@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Input, Toggle, Submitter } from '../../../toolbox';
-import { logIn } from '../../../user/actions';
+import { Input, Toggle, Submitter } from '../../../../toolbox';
+import { popView } from '../../actions';
+import { logIn } from '../../../../user/actions';
 
 const Form = styled.form`
    display: flex;
@@ -11,7 +12,6 @@ const Form = styled.form`
 `;
 
 const ErrorText = styled.h3`
-   font-family: "SF Pro Display";
    font-weight: normal;
    color: red;
    animation: fadeIn 0.15s ease;
@@ -24,24 +24,26 @@ const ErrorText = styled.h3`
 `;
 
 const mapStateToProps = state => {
-   return { auth: state.auth }
+   return { user: state.user }
 }
 
 const mapDispatchToProps = dispatch => {
    return {
       logIn: credentials => dispatch(logIn(credentials)),
+      popView: () => dispatch(popView()),
    }
 }
 
 class LoginForm extends Component {
    constructor(props) {
       super(props);
-      const { config } = props.auth;
+      const { config } = props.user;
 
       this.state = {
          remember: false,
          username: config ? config.username : null,
          password: null,
+         error: null,
       };
    }
 
@@ -53,10 +55,15 @@ class LoginForm extends Component {
       e.preventDefault();
       const { username, password, remember } = this.state;
 
+      this.setState({ error: null });
       this.props.logIn({
          username,
          password,
          remember
+      }).then(() => {
+         this.props.popView();
+      }).catch(error => {
+         this.setState({ error });
       });
    };
 
@@ -70,8 +77,8 @@ class LoginForm extends Component {
 
    render() {
       const { remember } = this.state;
-      const { auth } = this.props;
-      const { username } = this.state || auth.config || null;
+      const { user } = this.props;
+      const { username } = this.state || user.config || null;
 
       return (
          <Form onSubmit={this.handleSubmit}>
@@ -79,7 +86,6 @@ class LoginForm extends Component {
                type="text"
                placeholder="Username"
                required
-               autoFocus={!username}
                value={username || ''}
                onChange={this.handleUsernameChange}
             />
@@ -87,7 +93,6 @@ class LoginForm extends Component {
                type="password"
                placeholder="Password"
                required
-               autoFocus={username && username.length}
                onChange={this.handlePasswordChange}
             />
             <Toggle
@@ -95,8 +100,8 @@ class LoginForm extends Component {
                checked={remember}
                onChange={this.toggleRemember}
             />
-            <Submitter label="Log In" submitted={auth.loggingIn} />
-            <ErrorText>{auth.error}</ErrorText>
+            <Submitter label="Log In" submitted={user.loggingIn} />
+            <ErrorText>{this.state.error && this.state.error}</ErrorText>
          </Form>
       );
    }

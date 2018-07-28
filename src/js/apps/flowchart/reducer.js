@@ -11,6 +11,7 @@ const initialState = {
    error: null,
    data: [],
    stockCharts: [],
+   chartRevision: 0,
    chartData: [],
 };
 
@@ -19,22 +20,22 @@ const flowchartReducer = (state = initialState, action) => {
       case STOCK_CHART_SUCCESS:
          return {
             ...state,
-            stockCharts: action.stockCharts
-         }
+            stockCharts: action.stockCharts,
+         };
       case STOCK_CHART_FAILURE:
          return Object.assign({}, ...state, {
             error: action.error,
          });
       case GET_ACTIVE_CHART_REQUEST:
          return Object.assign({}, state, {
-            fetching: true
+            fetching: true,
          });
       case 'LOGOUT_SUCCESS':
          return {
             ...state,
             fetching: false,
-            chartData: null
-         }
+            chartData: null,
+         };
       case GET_ACTIVE_CHART_SUCCESS:
          return Object.assign({}, state, {
             fetching: false,
@@ -44,47 +45,11 @@ const flowchartReducer = (state = initialState, action) => {
          return Object.assign({}, state, {
             fetching: false,
          });
-      case 'MOVE_CARD': {
-         const years = { Freshman: 0, Sophomore: 1, Junior: 2, Senior: 3 };
-         const seasons = { Fall: 0, Winter: 1, Spring: 2, Summer: 3 };
-         const {
-            oldCardIndex,
-            newCardIndex,
-            sourceListId,
-            destListId,
-         } = action.payload;
-         const sourceListSplit = sourceListId.split('-');
-         //const destListSplit = destListId.split('-');
-         const sourceYear = years[sourceListSplit[1]];
-         const sourceSeason = seasons[sourceListSplit[0]];
-         // Move within the same list
-         if (sourceListId === destListId) {
-            const newCards = Array.from(
-               state.chartData[sourceYear].quarters[sourceSeason],
-            );
-            const [removedCard] = newCards.splice(oldCardIndex, 1);
-            newCards.splice(newCardIndex, 0, removedCard);
-            let newChartData = state.chartData;
-            newChartData[sourceYear].quarters[sourceSeason] = newCards;
-            return {
-               ...state,
-               chartData: newChartData
-            };
-         }
-         break;
-         /*
-         // Move card from one list to another
-         const sourceCards = Array.from(state[sourceListId].cards);
-         const [removedCard] = sourceCards.splice(oldCardIndex, 1);
-         const destinationCards = Array.from(state[destListId].cards);
-         destinationCards.splice(newCardIndex, 0, removedCard);
+      case 'MOVE_BLOCK':
          return {
             ...state,
-            [sourceListId]: { ...state[sourceListId], cards: sourceCards },
-            [destListId]: { ...state[destListId], cards: destinationCards },
-         };
-         */
-      }
+            chartData: action.chartData
+         }
       default:
          return state;
    }

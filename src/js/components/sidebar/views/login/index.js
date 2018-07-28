@@ -2,21 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import LoginForm from './login_form';
-import { oldSidebarView, newSidebarView } from '../../actions';
-import { constants } from '../../../toolbox';
-
-const { animation } = constants;
-const { oldViewEntering, oldViewExiting, slideInRight } = animation;
-const duration = '0.3s';
+import { pushView, popView } from '../../actions';
 
 const Container = styled.div`
    display: flex;
    flex-direction: column;
    flex: 1;
    padding-top: 1em;
-   animation: ${slideInRight} ${duration};
-   ${props => props.enteringNewView ? oldViewExiting : null};
-   ${props => props.enteringOldView ? oldViewEntering : null};
 `;
 
 const Logo = styled.img`
@@ -26,42 +18,43 @@ const Logo = styled.img`
 
 const mapStateToProps = state => {
    return {
-      auth: state.auth,
+      user: state.user,
       sidebar: state.sidebar,
    };
 };
 
 const mapDispatchToProps = dispatch => {
    return {
-      oldSidebarView: () => dispatch(oldSidebarView()),
-      newSidebarView: view => dispatch(newSidebarView(view)),
+      popView: () => dispatch(popView()),
+      pushView: view => dispatch(pushView(view)),
    };
 };
 
 class LoginView extends Component {
    componentDidUpdate() {
-      const { auth, sidebar } = this.props;
+
+      /*
+      const { sidebar } = this.props;
       const { viewStack } = sidebar;
       const currentView = viewStack[viewStack.length - 1];
 
-      if (auth.loggedIn) {
+      if (user.loggedIn) {
          if (currentView.route) {
-            this.props.newSidebarView({
+            this.props.pushView({
                name: currentView.route,
                props: {},
-               popStack: true,
+               popView: true,
             });
          } else {
-            this.props.oldSidebarView();
+            this.props.popView();
          }
-      }
+         }
+        */
    }
 
    render() {
-      const { enteringNewView, enteringOldView } = this.props;
-
       return (
-         <Container enteringNewView={enteringNewView} enteringOldView={enteringOldView}>
+         <Container>
             <Logo src="images/icons/logo_text.svg" />
             <LoginForm />
          </Container>
