@@ -1,0 +1,20 @@
+.card-title {
+   position: relative;
+   box-sizing: border-box;
+   width: 10em;
+   height: 10em;
+   display: flex;
+   margin: 8px 5px 0;
+   border-radius: 3px;
+   color: #222;
+   background: #fbfbfb;
+   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+   font-size: 16px;
+   overflow-wrap: break-word;
+   transition: box-shadow 0.15s;
+   user-select: none;
+}
+
+.card-title.card-dragging {
+   box-shadow: 0 0 10px black;
+}

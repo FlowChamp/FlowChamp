@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Droppable } from 'react-beautiful-dnd';
 import Block from './block';
+import { constants } from '../../../toolbox/';
+
+const { color } = constants;
 
 const mapStateToProps = state => {
    return {
       flowchart: state.flowchart,
    };
 };
+
+const Container = styled.div`
+   border-right: 1px solid ${color.grayAlpha[2]};
+`;
 
 class Quarter extends Component {
    render() {
@@ -20,29 +28,31 @@ class Quarter extends Component {
       return (
          <Droppable droppableId={quarterId}>
             {(provided, { isDraggingOver }) => (
-               <div ref={provided.innerRef}>
-                  {blocks.map((block, index) => {
-                     const { block_metadata } = block;
-                     const { _id } = block_metadata;
+               <Container>
+                  <div ref={provided.innerRef} style={{ height: '100%' }}>
+                     {blocks.map((block, index) => {
+                        const { block_metadata } = block;
+                        const { _id } = block_metadata;
 
-                     return (
-                        <Block
-                           key={_id}
-                           isDraggingOver={isDraggingOver}
-                           blockId={_id}
-                           index={index}
-                           quarterId={quarterId}
-                           data={block}
-                        />
-                     );
-                  })}
-                  {provided.placeholder}
-                  <div
-                     ref={el => {
-                        this.listEnd = el;
-                     }}
-                  />
-               </div>
+                        return (
+                           <Block
+                              key={_id}
+                              isDraggingOver={isDraggingOver}
+                              blockId={_id}
+                              index={index}
+                              quarterId={quarterId}
+                              data={block}
+                           />
+                        );
+                     })}
+                     {provided.placeholder}
+                     <div
+                        ref={el => {
+                           this.listEnd = el;
+                        }}
+                     />
+                  </div>
+               </Container>
             )}
          </Droppable>
       );

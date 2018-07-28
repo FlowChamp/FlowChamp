@@ -3,21 +3,18 @@ import { connect } from 'react-redux';
 import { Draggable } from 'react-beautiful-dnd';
 import styled, { css } from 'styled-components';
 import BlockContents from './contents';
+import './index.css';
 
 const OuterContainer = styled.div`
    position: relative;
-   margin: 8px 5px;
-   box-sizing: border-box;
-   transition: all 0.15s ease;
-   animation: slideReveal 0.5s ease;
 
-   ${props => props.isHidden && css`
-      transform: translateX(-20%);
-      opacity: 0;
-      pointer-events: none;
-   `}
-
-   @keyframes slideReveal {
+   ${props =>
+      props.isHidden &&
+      css`
+         transform: translateX(-20%);
+         opacity: 0;
+         pointer-events: none;
+      `} @keyframes slideReveal {
       0% {
          opacity: 0;
          transform: translateX(20%);
@@ -32,15 +29,17 @@ const OuterContainer = styled.div`
    }
 `;
 
-const BlockContainer = styled.div``;
-
 const mapStateToProps = state => {
    return {
-      flowchart: state.flowchart
-   }
-}
+      flowchart: state.flowchart,
+   };
+};
 
 class Block extends Component {
+   state = {
+      shouldAnimate: true,
+   };
+
    toggleCardEditor = () => {
       /* CHANGE THIS WITH A DIFFERENT MODAL */
    };
@@ -57,28 +56,32 @@ class Block extends Component {
       }
    };
 
+   componentDidMount() {
+      setTimeout(() => {
+         this.setState({ shouldAnimate: false });
+      }, 300);
+   }
+
    render() {
-      const {
-         flowchart,
-         blockId,
-         index,
-         data,
-         isDraggingOver,
-      } = this.props;
+      const { flowchart, blockId, index, data, isDraggingOver } = this.props;
       const { fetching } = flowchart;
+      const { shouldAnimate } = this.state;
 
       return (
          <Draggable draggableId={blockId} index={index}>
             {(provided, snapshot) => (
-               <OuterContainer isHidden={fetching}>
+               <OuterContainer
+                  isHidden={fetching}
+                  shouldAnimate={shouldAnimate}>
                   {/* eslint-disable */}
                   <div
+                     className="card-title"
                      ref={ref => {
                         provided.innerRef(ref);
                         this.ref = ref;
                      }}
-                     {...provided.draggableProps}
                      {...provided.dragHandleProps}
+                     {...provided.draggableProps}
                      onClick={event => {
                         provided.dragHandleProps.onClick(event);
                         this.handleClick(event);
@@ -90,9 +93,7 @@ class Block extends Component {
                      style={{
                         ...provided.draggableProps.style,
                      }}>
-                     <BlockContainer>
-                        <BlockContents data={data} />
-                     </BlockContainer>
+                     <BlockContents data={data} />
                   </div>
                   {/* Remove placeholder when not dragging over to reduce snapping */}
                   {isDraggingOver && provided.placeholder}
