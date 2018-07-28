@@ -34,7 +34,6 @@ class Block extends Component {
 
    render() {
       const { blockId, index, data, isDraggingOver } = this.props;
-      if (!data.course_data) return null;
       return (
          <Draggable draggableId={blockId} index={index}>
             {(provided, snapshot) => (

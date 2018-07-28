@@ -1,11 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Droppable } from 'react-beautiful-dnd';
-import Block from './block/block';
+import Block from './block';
+
+const mapStateToProps = state => {
+   return {
+      flowchart: state.flowchart,
+   };
+};
 
 class Quarter extends Component {
    render() {
-      const { quarterId, blocks } = this.props;
+      const { season, index, quarterId, flowchart } = this.props;
+      const { chartData } = flowchart;
+
+      if (!chartData) return null;
+      const blocks = chartData[index].quarters[season];
+
       return (
          <Droppable droppableId={quarterId}>
             {(provided, { isDraggingOver }) => (
@@ -38,4 +49,4 @@ class Quarter extends Component {
    }
 }
 
-export default connect()(Quarter);
+export default connect(mapStateToProps)(Quarter);

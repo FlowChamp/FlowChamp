@@ -1,17 +1,19 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { devToolsEnhancer } from 'redux-devtools-extension';
 import sidebarReducer from './sidebar/reducer';
-import authReducer from './user/reducer';
+import userReducer from './user/reducer';
 import flowchartReducer from './apps/flowchart/reducer';
 
 const rootReducer = combineReducers({
-   auth: authReducer,
+   user: userReducer,
    sidebar: sidebarReducer,
    flowchart: flowchartReducer,
 });
 
 const store = createStore(
    rootReducer,
+   devToolsEnhancer(),
    applyMiddleware(thunkMiddleware)
 );
 

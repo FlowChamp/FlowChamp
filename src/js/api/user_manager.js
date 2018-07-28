@@ -9,13 +9,14 @@ export default class UserManager {
 
    logIn = credentials => {
       const { username, password } = credentials;
+      console.log(username, password);
 
       return this.makeRequest({
          url: `${this.url}/authorize`,
          data: {
             method: 'POST',
             headers: {
-               Authorization: 'Basic ' + btoa(`${username}:${password}`),
+               authorization: 'Basic ' + btoa(`${username}:${password}`),
                'Content-Type': 'application/json',
             },
             credentials: this.credentials,
@@ -143,3 +144,5 @@ export default class UserManager {
       return this.config;
    }
 }
+
+

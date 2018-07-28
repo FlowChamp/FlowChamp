@@ -3,13 +3,9 @@ import { connect } from 'react-redux';
 import HamburgerMenu from 'react-hamburger-menu';
 import { ArrowLeft } from 'react-feather';
 import styled from 'styled-components';
-import {
-   toggleSidebar,
-   newSidebarView,
-   oldSidebarView,
-} from '../sidebar/actions';
-import { logOut } from '../user/actions';
-import { constants } from '../toolbox';
+import { toggleSidebar, pushView, popView } from '../../sidebar/actions';
+import { logOut } from '../../user/actions';
+import { constants } from '../../toolbox';
 
 const { color, animation } = constants;
 
@@ -98,7 +94,7 @@ const MenuButton = ({ isOpen, menuClicked }) => {
 
 const mapStateToProps = state => {
    return {
-      auth: state.auth,
+      user: state.user,
       flowchart: state.flowchart,
       sidebar: state.sidebar,
    };
@@ -107,8 +103,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
    return {
       toggleSidebar: value => dispatch(toggleSidebar(value)),
-      newSidebarView: view => dispatch(newSidebarView(view)),
-      oldSidebarView: () => dispatch(oldSidebarView()),
+      pushView: view => dispatch(pushView(view)),
+      popView: () => dispatch(popView()),
       logOut: config => dispatch(logOut(config)),
    };
 };
@@ -116,10 +112,12 @@ const mapDispatchToProps = dispatch => {
 class Header extends Component {
    newView = (name, props) => {
       this.props.toggleSidebar(true);
-      this.props.newSidebarView({
-         name,
-         props: props || {},
-      });
+      setTimeout(() => {
+         this.props.pushView({
+            name,
+            props: props || {},
+         });
+      }, 300);
    };
 
    handleClick = () => {
@@ -129,7 +127,7 @@ class Header extends Component {
    };
 
    logOut = () => {
-      const { config } = this.props.auth;
+      const { config } = this.props.user;
 
       this.props.toggleSidebar(false);
       this.props.logOut(config);
@@ -142,12 +140,16 @@ class Header extends Component {
    };
 
    render() {
-      const { auth, flowchart, sidebar } = this.props;
-      const { loggedIn } = auth;
-      const { viewStack } = sidebar;
-      const onMainView = viewStack.length === 1;
-      const chartName = (flowchart.fetching || auth.updatingConfig) ? 'Loading...' :
-         (auth.config && auth.config.active_chart) ? auth.config.active_chart : 'Welcome';
+      const { user, flowchart, sidebar } = this.props;
+      const { loggedIn } = user;
+      const { stack } = sidebar;
+      const onMainView = stack.length === 1;
+      const chartName =
+         flowchart.fetching || user.updatingConfig
+            ? 'Loading...'
+            : user.config && user.config.active_chart
+               ? user.config.active_chart
+               : 'Welcome';
 
       return (
          <Container>
@@ -156,7 +158,7 @@ class Header extends Component {
                   <MenuButton isOpen={sidebar.isOpen} />
                </MenuContainer>
                <BackButtonContainer hidden={onMainView || !sidebar.isOpen}>
-                  <ArrowLeft size={30} onClick={this.props.oldSidebarView} />
+                  <ArrowLeft size={30} onClick={this.props.popView} />
                </BackButtonContainer>
                <Logo hidden={sidebar.isOpen} src="images/icons/logo_text.svg" />
             </SectionContainer>

@@ -1,4 +1,4 @@
-import UserManager from '../helpers/user_manager';
+import UserManager from '../api/user_manager';
 
 import {
    LOGIN_REQUEST,
@@ -20,7 +20,7 @@ import {
    DELETE_CHART_SUCCESS,
 } from './constants';
 
-/* LOG IN */
+// Query the API with the provided username, password, and remember bool
 export const logIn = credentials => {
    return dispatch => {
       const user = new UserManager();
@@ -29,27 +29,33 @@ export const logIn = credentials => {
          credentials,
       });
 
-      return user
-         .logIn(credentials)
-         .then(config => {
-            const loggedInUser = new UserManager(config);
-            fetchActiveChart(loggedInUser, config, dispatch);
-            dispatch({
-               type: LOGIN_SUCCESS,
-               config,
+      return new Promise((resolve, reject) => {
+         user
+            .logIn(credentials)
+            .then(config => {
+               const loggedInUser = new UserManager(config);
+
+               dispatch({
+                  type: LOGIN_SUCCESS,
+                  config,
+               });
+               // Fetch logged in user's currently selected chart
+               fetchActiveChart(loggedInUser, config, dispatch);
+               localStorage.flowchampConfig = JSON.stringify(config);
+               resolve(config);
+            })
+            .catch(error => {
+               dispatch({
+                  type: LOGIN_FAILURE,
+                  error,
+               });
+               reject(error);
             });
-            localStorage.flowchampConfig = JSON.stringify(config);
-         })
-         .catch(error => {
-            dispatch({
-               type: LOGIN_FAILURE,
-               error,
-            });
-         });
+      });
    };
 };
 
-/* LOG OUT */
+// Query the API and remove the user's current config
 export const logOut = config => {
    return dispatch => {
       const user = new UserManager();
@@ -76,7 +82,7 @@ export const logOut = config => {
    };
 };
 
-/* GET USER CONFIG */
+// Get the most up-to-date config from the API (Assuming user is logged in)
 export const fetchUserConfig = prevConfig => {
    const user = new UserManager(prevConfig);
 
@@ -89,13 +95,13 @@ export const fetchUserConfig = prevConfig => {
       return user
          .getUserConfig()
          .then(newConfig => {
-            if (newConfig.active_chart) {
-               fetchActiveChart(user, newConfig, dispatch);
-            }
             dispatch({
                type: USER_CONFIG_SUCCESS,
                config: newConfig,
             });
+            if (newConfig.active_chart) {
+               fetchActiveChart(user, newConfig, dispatch);
+            }
          })
          .catch(error => {
             // User token probably expired. Log them out in this case
@@ -107,6 +113,7 @@ export const fetchUserConfig = prevConfig => {
    };
 };
 
+// Using the user's current config, grab the active_chart (if there is one)
 const fetchActiveChart = (user, config, dispatch) => {
    if (!config.active_chart) {
       return;
@@ -118,7 +125,7 @@ const fetchActiveChart = (user, config, dispatch) => {
    user
       .getUserChart(config.active_chart)
       .then(chartData => {
-         sortChartData(chartData).then(sortedData => {
+         sortChartData(chartData, config).then(sortedData => {
             dispatch({
                type: 'GET_ACTIVE_CHART_SUCCESS',
                chartData: sortedData,
@@ -133,12 +140,16 @@ const fetchActiveChart = (user, config, dispatch) => {
       });
 };
 
-const sortChartData = data => {
+/* Sort the data returned from the API into a useable 2D array. This is
+ * required so that we can keep track of what courses have been moved.
+ */
+const sortChartData = (data, config) => {
+   let { start_year } = config;
    const newData = [
-      { _id: 'Freshman', quarters: [[], [], [], []] },
-      { _id: 'Sophomore', quarters: [[], [], [], []] },
-      { _id: 'Junior', quarters: [[], [], [], []] },
-      { _id: 'Senior', quarters: [[], [], [], []] },
+      { _id: 'Freshman', year: start_year++, quarters: [[], [], [], []] },
+      { _id: 'Sophomore', year: start_year++, quarters: [[], [], [], []] },
+      { _id: 'Junior', year: start_year++, quarters: [[], [], [], []] },
+      { _id: 'Senior', year: start_year++, quarters: [[], [], [], []] },
    ];
 
    return new Promise((resolve, reject) => {
@@ -177,11 +188,11 @@ export const setActiveChart = (config, name) => {
       return user
          .updateConfig(newConfig)
          .then(() => {
-            fetchActiveChart(user, newConfig, dispatch);
             dispatch({
                type: SET_ACTIVE_CHART_SUCCESS,
                active_chart: config.active_chart,
             });
+            fetchActiveChart(user, newConfig, dispatch);
          })
          .catch(error => {
             dispatch({
@@ -209,7 +220,7 @@ export const setStartYear = (config, year) => {
          .then(() => {
             dispatch({
                type: 'UPDATE_CONFIG_SUCCESS',
-               config: newConfig
+               config: newConfig,
             });
          })
          .catch(error => {
@@ -233,11 +244,11 @@ export const addChart = ({ config, name, major }) => {
       return user
          .addChart({ name, major })
          .then(newConfig => {
-            fetchActiveChart(user, newConfig, dispatch);
             dispatch({
                type: ADD_CHART_SUCCESS,
                config: newConfig,
             });
+            fetchActiveChart(user, newConfig, dispatch);
          })
          .catch(error => {
             dispatch({
@@ -261,20 +272,18 @@ export const deleteChart = (config, name) => {
       return user
          .deleteChart(name)
          .then(newConfig => {
+            dispatch({
+               type: DELETE_CHART_SUCCESS,
+               config: newConfig,
+            });
             if (!newConfig.active_chart) {
                dispatch({
                   type: 'GET_ACTIVE_CHART_SUCCESS',
                   chartData: null,
                });
-            } else if (
-               newConfig.active_chart !== config.active_chart
-            ) {
+            } else if (newConfig.active_chart !== config.active_chart) {
                fetchActiveChart(user, newConfig, dispatch);
             }
-            dispatch({
-               type: DELETE_CHART_SUCCESS,
-               config: newConfig,
-            });
          })
          .catch(error => {
             console.error('Error: unable to delete chart: ', error);

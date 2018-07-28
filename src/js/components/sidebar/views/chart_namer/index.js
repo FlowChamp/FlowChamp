@@ -1,28 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { newSidebarView, emptySidebar } from '../../actions';
-import { addChart } from '../../../user/actions';
+import { pushView, emptyViews } from '../../actions';
+import { addChart } from '../../../../user/actions';
 import Header from '../../components/header';
-import { Input, Submitter, constants } from '../../../toolbox';
-//import Button from '../../components/button';
-
-const { animation } = constants;
-const {
-   oldViewEntering,
-   oldViewExiting,
-   slideInRight,
-   slideInLeft,
-} = animation;
-const duration = '0.3s';
+import { Input, Submitter } from '../../../../toolbox';
 
 const Container = styled.div`
    flex: 1;
    overflow: auto;
-   animation: ${props => (props.isPrevView ? slideInLeft : slideInRight)}
-      ${duration};
-   ${props => (props.enteringNewView ? oldViewExiting : null)};
-   ${props => (props.enteringOldView ? oldViewEntering : null)};
 `;
 
 const Form = styled.form`
@@ -46,15 +32,15 @@ const ErrorText = styled.h3`
 
 const mapStateToProps = state => {
    return {
-      auth: state.auth,
+      user: state.user,
    };
 };
 
 const mapDispatchToProps = dispatch => {
    return {
-      newSidebarView: view => dispatch(newSidebarView(view)),
+      pushView: view => dispatch(pushView(view)),
       addChart: data => dispatch(addChart(data)),
-      emptySidebar: () => dispatch(emptySidebar()),
+      emptyViews: () => dispatch(emptyViews()),
    };
 };
 
@@ -63,15 +49,15 @@ class ChartNamerView extends Component {
       super(props);
       this.state = {
          chartName: null,
-         active_chart: props.auth.config.active_chart,
+         active_chart: props.user.config.active_chart,
          addedChart: false,
       };
    }
 
    static getDerivedStateFromProps(nextProps, prevState) {
-      const { active_chart } = nextProps.auth.config;
+      const { active_chart } = nextProps.user.config;
 
-      if (nextProps.auth.config.active_chart !== prevState.active_chart) {
+      if (nextProps.user.config.active_chart !== prevState.active_chart) {
          return {
             active_chart,
             addedChart: true,
@@ -82,7 +68,7 @@ class ChartNamerView extends Component {
 
    handleSubmit = e => {
       e.preventDefault();
-      const { config } = this.props.auth;
+      const { config } = this.props.user;
       const { chartName } = this.state;
 
       this.props.addChart({
@@ -97,7 +83,7 @@ class ChartNamerView extends Component {
    };
 
    componentDidMount() {
-      const { config } = this.props.auth;
+      const { config } = this.props.user;
       const { active_chart } = config;
 
       this.setState({ active_chart });
@@ -105,30 +91,26 @@ class ChartNamerView extends Component {
 
    componentDidUpdate() {
       if (this.state.addedChart) {
-         this.props.emptySidebar();
+         this.props.emptyViews();
          this.setState({ addedChart: false });
       }
    }
 
    render() {
-      const { auth, isPrevView, enteringNewView, enteringOldView } = this.props;
+      const { user } = this.props;
 
       return (
-         <Container
-            isPrevView={isPrevView}
-            enteringNewView={enteringNewView}
-            enteringOldView={enteringOldView}>
+         <Container>
             <Header label="Give It a Name" />
             <Form onSubmit={this.handleSubmit}>
                <Input
                   type="text"
-                  autoFocus
                   required
                   placeholder="Chart name"
                   onChange={this.handleChange}
                />
-               <Submitter label="Save chart" submitted={auth.updatingConfig} />
-               <ErrorText>{auth.error}</ErrorText>
+               <Submitter label="Save chart" submitted={user.updatingConfig} />
+               <ErrorText>{user.error}</ErrorText>
             </Form>
          </Container>
       );

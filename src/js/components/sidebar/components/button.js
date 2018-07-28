@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { constants } from '../../toolbox';
+import { constants } from '../../../toolbox';
 import { ChevronRight } from 'react-feather';
 
 const { color } = constants;
@@ -15,17 +15,10 @@ const Container = styled.div`
    box-sizing: border-box;
    margin-top: 1px;
    cursor: pointer;
-   animation: fadein 0.25s ease;
    justify-content: space-between;
 
    &:hover {
       background: ${color.gray[1]};
-   }
-
-   @keyframes fadein {
-      0% {
-         opacity: 0;
-      }
    }
 `;
 

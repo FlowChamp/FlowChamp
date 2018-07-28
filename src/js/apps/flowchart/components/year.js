@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import Quarter from './quarter';
 import styled from 'styled-components';
 
-const YearContainer = styled.div`
+const Container = styled.div`
    margin: 0 24px;
-   animation: slideAppear 0.5s;
    font-family: 'SF Pro Display';
 
    @keyframes slideAppear {
@@ -16,11 +15,23 @@ const YearContainer = styled.div`
    }
 `;
 
+const TitleContainer = styled.div`
+   display: flex;
+   align-items: flex-end;
+   margin: 8px 0;
+`;
+
 const Title = styled.h2`
    font-weight: 200;
    font-size: 1.8em;
-   margin: 8px 4px;
+   margin: 0;
+   margin-right: 8px;
    color: #4f4f4f;
+`;
+
+const Subtitle = styled.h4`
+   font-weight: 100;
+   margin: 5px;
 `;
 
 const QuartersContainer = styled.div`
@@ -30,31 +41,49 @@ const QuartersContainer = styled.div`
 class Year extends Component {
    getQuarters = () => {
       const seasons = ['Fall', 'Winter', 'Spring', 'Summer'];
-      const { year } = this.props;
+      const { year, index } = this.props;
       const { quarters } = year;
 
-      return quarters.map((blocks, index) => (
+      return quarters.map((blocks, quarterIndex) => (
          <Quarter
-            key={`${seasons[index]}-${year._id}`}
-            quarterId={`${seasons[index]}-${year._id}`}
+            year={year._id}
+            season={quarterIndex}
+            index={index}
+            key={`${seasons[quarterIndex]}-${year._id}`}
+            quarterId={`${index}-${quarterIndex}`}
             blocks={blocks}
          />
       ));
    };
 
    render = () => {
-      const { year } = this.props;
+      const { year, index } = this.props;
+      const { user } = this.props;
+      const { config } = user;
+      const { start_year } = config;
+      const end_year = start_year + index + 1;
+      const endYearAbbr = end_year.toString().substr(-2);
+      const yearRange = `${start_year + index}-${endYearAbbr}`;
 
       return (
-         <YearContainer>
-            <Title>{year._id}</Title>
+         <Container>
+            <TitleContainer>
+               <Title>{year._id}</Title>
+               <Subtitle>
+                  ({yearRange})
+               </Subtitle>
+            </TitleContainer>
             <QuartersContainer>{this.getQuarters()}</QuartersContainer>
-         </YearContainer>
+         </Container>
       );
    };
 }
 
-export default connect()(Year);
+const mapStateToProps = state => ({
+   user: state.user,
+});
+
+export default connect(mapStateToProps)(Year);
 
 /*
              <div>

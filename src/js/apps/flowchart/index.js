@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Board from './components/board';
-import { LoadingCover } from '../../toolbox';
 
 const FlowchartContainer = styled.div`
    position: relative;
@@ -14,7 +13,7 @@ class Flowchart extends Component {
    constructor(props) {
       super(props);
       this.state = {
-         data: [],
+         data: props.flowchart.chartData,
          fetching: props.flowchart.fetching
       };
    }
@@ -37,11 +36,9 @@ class Flowchart extends Component {
 
    render() {
       const { fetching, data } = this.state;
-      const { sidebar } = this.props;
 
       return (
          <FlowchartContainer>
-            <LoadingCover shift={sidebar.isOpen} isOpen={fetching} />
             <Board hide={fetching} data={data} />
          </FlowchartContainer>
       );
@@ -49,7 +46,7 @@ class Flowchart extends Component {
 }
 
 const mapStateToProps = state => ({
-   auth: state.auth,
+   user: state.user,
    flowchart: state.flowchart,
    sidebar: state.sidebar,
 });

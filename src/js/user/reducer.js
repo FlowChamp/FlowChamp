@@ -21,11 +21,10 @@ const initialState = {
    loggingOut: false,
    updatingConfig: false,
    credentials: null,
-   error: null,
    config: null,
 };
 
-const authReducer = (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
    switch (action.type) {
       case LOGIN_REQUEST:
          return Object.assign({}, state, {
@@ -42,13 +41,11 @@ const authReducer = (state = initialState, action) => {
       case LOGIN_FAILURE:
          return Object.assign({}, state, {
             loggingIn: false,
-            error: action.error,
             credentials: null,
          });
       case LOGOUT_REQUEST:
          return Object.assign({}, state, {
             loggingOut: true,
-            error: null,
             config: action.config,
          });
       case LOGOUT_SUCCESS:
@@ -61,7 +58,6 @@ const authReducer = (state = initialState, action) => {
       case USER_CONFIG_REQUEST:
          return Object.assign({}, state, {
             loggingIn: true,
-            error: null,
             config: action.config,
          });
       case USER_CONFIG_SUCCESS:
@@ -96,7 +92,6 @@ const authReducer = (state = initialState, action) => {
       case ADD_CHART_REQUEST:
          return Object.assign({}, state, {
             updatingConfig: true,
-            error: null,
          });
       case ADD_CHART_SUCCESS:
          return Object.assign({}, state, {
@@ -106,7 +101,6 @@ const authReducer = (state = initialState, action) => {
       case ADD_CHART_FAILURE:
          return Object.assign({}, state, {
             updatingConfig: false,
-            error: action.error,
          });
       case DELETE_CHART_SUCCESS:
          return Object.assign({}, state, {
@@ -117,4 +111,4 @@ const authReducer = (state = initialState, action) => {
    }
 };
 
-export default authReducer;
+export default userReducer;

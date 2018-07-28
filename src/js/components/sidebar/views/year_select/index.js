@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { newSidebarView } from '../../actions';
-import { setStartYear } from '../../../user/actions';
+import { setStartYear } from '../../../../user/actions';
 import Button from '../../components/button';
 import Header from '../../components/header';
-import { constants } from '../../../toolbox';
+import { constants } from '../../../../toolbox';
 
 const { animation } = constants;
 const {
@@ -37,7 +37,7 @@ const getYears = () => {
 class YearSelectView extends Component {
    selectYear = year => {
       const { route } = this.props;
-      const { config } = this.props.auth;
+      const { config } = this.props.user;
 
       this.props.setStartYear(config, year);
       this.props.newSidebarView({
@@ -97,7 +97,7 @@ class YearSelectView extends Component {
 
 const mapStateToProps = state => {
    return {
-      auth: state.auth,
+      user: state.user,
       flowchart: state.flowchart,
    };
 };

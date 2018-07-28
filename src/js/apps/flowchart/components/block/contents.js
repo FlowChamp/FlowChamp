@@ -46,21 +46,49 @@ const UnitCount = styled.h4`
 const BlockContents = ({ data }) => {
    const { block_metadata, course_data } = data;
 
-   //console.log(course_data);
-   const { dept, course_number, title, units } = course_data;
    const multiCourse = Array.isArray(course_data);
+   const hasCourseData = course_data !== undefined;
 
    return (
       <ContentContainer color={block_metadata.course_type}>
          <Header>
-            {multiCourse ? 'Multi Course' : `${dept} ${course_number}`}
+            {multiCourse
+               ? 'Multi Course'
+               : hasCourseData
+                  ? `${course_data.dept} ${course_data.course_number}`
+                  : block_metadata.course_type}
          </Header>
          <Body>
-         <CourseTitle>{multiCourse ? 'Multi' : `${title}`}</CourseTitle>
+            <CourseTitle>
+               {multiCourse
+                  ? 'Click to Specify'
+                  : hasCourseData
+                     ? `${course_data.title}`
+                     : 'Click to Specify'}
+            </CourseTitle>
          </Body>
-         <UnitCount>{multiCourse ? '4 Units' : `${units} units`}</UnitCount>
+         <UnitCount>
+            {multiCourse
+               ? '4'
+               : hasCourseData
+                  ? `${course_data.units}`
+                  : 4} Units
+         </UnitCount>
       </ContentContainer>
    );
 };
 
 export default BlockContents;
+
+/*
+
+      <ContentContainer color={block_metadata.course_type}>
+         <Header>
+            {multiCourse ? 'Multi Course' : `${dept} ${course_number}`}
+         </Header>
+         <Body>
+            <CourseTitle>{multiCourse ? 'Multi' : `${title}`}</CourseTitle>
+         </Body>
+         <UnitCount>{multiCourse ? '4 Units' : `${units} units`}</UnitCount>
+      </ContentContainer>
+ * */
