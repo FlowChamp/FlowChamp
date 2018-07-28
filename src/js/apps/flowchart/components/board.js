@@ -4,16 +4,14 @@ import styled from 'styled-components';
 import { moveBlock } from '../actions';
 import { DragDropContext } from 'react-beautiful-dnd';
 import Year from './year';
+import { constants } from '../../../toolbox';
+
+const { animation } = constants;
+const { fadeIn } = animation;
 
 const YearContainer = styled.div`
    display: ${props => (props.hide ? 'none' : 'flex')};
-   animation: fadeIn 0.5s ease;
-
-   @keyframes fadeIn {
-      0% {
-         opacity: 0;
-      }
-   }
+   animation: ${fadeIn} 0.5s ease;
 `;
 
 class Board extends Component {
