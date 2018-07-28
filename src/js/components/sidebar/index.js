@@ -8,6 +8,7 @@ import LoginView from './views/login';
 import ChartSelectView from './views/chart_select';
 import YearSelectView from './views/year_select';
 import ChartNamerView from './views/chart_namer';
+import { toggleSidebar } from '../../components/sidebar/actions';
 import { constants } from '../../toolbox/';
 
 const { color } = constants;
@@ -36,6 +37,29 @@ const Container = styled.div`
       `};
 `;
 
+const Cover = styled.div`
+   position: fixed;
+   z-index: 98;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   background: rgba(200,200,200,0.8);
+   z-index: -1;
+   opacity: 0;
+   pointer-events: none;
+   transition: all 0.25s ease-in-out;
+
+   ${props =>
+      props.isOpen &&
+      css`
+         z-index: 98;
+         opacity: 1;
+         pointer-events: all;
+         cursor: pointer;
+      `};
+`;
+
 const ViewContainer = styled.div`
    z-index: ${props => (props.isPrevView ? 0 : 1)};
    position: absolute;
@@ -44,15 +68,19 @@ const ViewContainer = styled.div`
    left: 0;
    right: 0;
    background: white;
-   animation: ${props => props.goingBack ? 'slideHi' : 'slideBye'} 0.3s ease-in-out;
+   animation: ${props => (props.goingBack ? 'slideHi' : 'slideBye')} 0.3s
+      ease-in-out;
    transition: all 0.3s ease-in-out;
    -webkit-overflow-scrolling: touch;
    overflow: auto;
 
-   ${props => props.isPrevView && !props.returning && css`
-      filter: brightness(80%);
-      transform: translateX(-50%);
-   `};
+   ${props =>
+      props.isPrevView &&
+      !props.returning &&
+      css`
+         filter: brightness(80%);
+         transform: translateX(-50%);
+      `};
 
    @keyframes slideBye {
       0% {
@@ -78,6 +106,12 @@ const views = {
 const mapStateToProps = state => {
    return { sidebar: state.sidebar };
 };
+
+const mapDispatchToProps = dispatch => {
+   return {
+      toggleSidebar: () => dispatch(toggleSidebar()),
+   }
+}
 
 const ViewStack = connect(mapStateToProps)(({ stack, goingBack }) => {
    return stack.map(({ name, props }, index) => {
@@ -148,11 +182,14 @@ class Sidebar extends Component {
       const { stack, goingBack } = this.state;
 
       return (
-         <Container isOpen={isOpen}>
-            <ViewStack stack={stack} goingBack={goingBack} />
-         </Container>
+         <div>
+            <Cover isOpen={isOpen} onClick={this.props.toggleSidebar}/>
+            <Container isOpen={isOpen}>
+               <ViewStack stack={stack} goingBack={goingBack} />
+            </Container>
+         </div>
       );
    }
 }
 
-export default connect(mapStateToProps)(Sidebar);
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
