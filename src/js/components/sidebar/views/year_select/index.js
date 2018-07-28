@@ -1,27 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { newSidebarView } from '../../actions';
+import { pushView } from '../../actions';
 import { setStartYear } from '../../../../user/actions';
 import Button from '../../components/button';
 import Header from '../../components/header';
-import { constants } from '../../../../toolbox';
-
-const { animation } = constants;
-const {
-   oldViewEntering,
-   oldViewExiting,
-   slideInRight,
-   slideInLeft,
-} = animation;
-const duration = '0.25s';
 
 const Container = styled.div`
    flex: 1;
-   animation: ${props => (props.isPrevView ? slideInLeft : slideInRight)}
-      ${duration};
-   ${props => (props.enteringNewView ? oldViewExiting : null)};
-   ${props => (props.enteringOldView ? oldViewEntering : null)};
    overflow: auto;
 `;
 
@@ -40,7 +26,7 @@ class YearSelectView extends Component {
       const { config } = this.props.user;
 
       this.props.setStartYear(config, year);
-      this.props.newSidebarView({
+      this.props.pushView({
          name: route,
          props: {},
       });
@@ -81,13 +67,8 @@ class YearSelectView extends Component {
    handleClick = options => {};
 
    render() {
-      const { isPrevView, enteringNewView, enteringOldView } = this.props;
-
       return (
-         <Container
-            isPrevView={isPrevView}
-            enteringNewView={enteringNewView}
-            enteringOldView={enteringOldView}>
+         <Container>
             <Header label="Select Current Grade" />
             {this.getYearButtons()}
          </Container>
@@ -105,7 +86,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
    return {
       setStartYear: (config, year) => dispatch(setStartYear(config, year)),
-      newSidebarView: view => dispatch(newSidebarView(view)),
+      pushView: view => dispatch(pushView(view)),
    };
 };
 

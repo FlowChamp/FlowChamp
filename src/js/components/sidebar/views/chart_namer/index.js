@@ -4,7 +4,10 @@ import styled from 'styled-components';
 import { pushView, emptyViews } from '../../actions';
 import { addChart } from '../../../../user/actions';
 import Header from '../../components/header';
-import { Input, Submitter } from '../../../../toolbox';
+import { constants, Input, Submitter } from '../../../../toolbox/';
+
+const { animation } = constants;
+const { fadeIn } = animation;
 
 const Container = styled.div`
    flex: 1;
@@ -21,13 +24,7 @@ const Form = styled.form`
 const ErrorText = styled.h3`
    font-weight: normal;
    color: red;
-   animation: fadeIn 0.15s ease;
-
-   @keyframes fadeIn {
-      from {
-         opacity: 0;
-      }
-   }
+   animation: ${fadeIn} 0.15s ease;
 `;
 
 const mapStateToProps = state => {

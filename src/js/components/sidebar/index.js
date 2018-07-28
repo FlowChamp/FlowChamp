@@ -8,7 +8,7 @@ import LoginView from './views/login';
 import ChartSelectView from './views/chart_select';
 import YearSelectView from './views/year_select';
 import ChartNamerView from './views/chart_namer';
-import { constants } from '../../toolbox';
+import { constants } from '../../toolbox/';
 
 const { color } = constants;
 

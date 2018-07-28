@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { constants } from '../../../../toolbox';
+import { constants } from '../../../../toolbox/';
 
 const { color } = constants;
 

@@ -9,9 +9,10 @@ import {
    popView,
 } from '../../components/sidebar/actions';
 import { logOut } from '../../user/actions';
-import { constants } from '../../toolbox';
+import { constants } from '../../toolbox/';
 
 const { color, animation } = constants;
+const { fadeIn } = animation;
 
 const Logo = styled.img`
    margin: 0 16px;
@@ -19,7 +20,7 @@ const Logo = styled.img`
    width: 100px;
    pointer-events: none;
    user-select: none;
-   animation: ${animation.fadeIn} 0.3s ease;
+   animation: ${fadeIn} 0.3s ease;
 `;
 
 const Container = styled.div`

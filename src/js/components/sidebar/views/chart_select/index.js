@@ -5,7 +5,7 @@ import { fetchStockCharts } from '../../../../apps/flowchart/actions';
 import { pushView } from '../../actions';
 import Button from '../../components/button';
 import Header from '../../components/header';
-import { Loader } from '../../../../toolbox';
+import { Loader } from '../../../../toolbox/';
 
 const Container = styled.div`
    flex: 1;

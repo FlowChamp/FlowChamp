@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Input, Toggle, Submitter } from '../../../../toolbox';
+import { constants, Input, Toggle, Submitter } from '../../../../toolbox/';
 import { popView } from '../../actions';
 import { logIn } from '../../../../user/actions';
+
+const { animation } = constants;
+const { fadeIn } = animation;
 
 const Form = styled.form`
    display: flex;
@@ -14,13 +17,7 @@ const Form = styled.form`
 const ErrorText = styled.h3`
    font-weight: normal;
    color: red;
-   animation: fadeIn 0.15s ease;
-
-   @keyframes fadeIn {
-      from {
-         opacity: 0;
-      }
-   }
+   animation: ${fadeIn} 0.15s ease;
 `;
 
 const mapStateToProps = state => {

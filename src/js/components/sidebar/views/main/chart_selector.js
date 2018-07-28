@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Plus, X } from 'react-feather';
 import { pushView } from '../../actions';
 import { setActiveChart, deleteChart } from '../../../../user/actions';
-import { Loader, constants } from '../../../../toolbox';
+import { Loader, constants } from '../../../../toolbox/';
 
 const { color } = constants;
 
