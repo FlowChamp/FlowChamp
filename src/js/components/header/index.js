@@ -151,7 +151,7 @@ class Header extends Component {
       const chartName =
          flowchart.fetching || user.updatingConfig
             ? 'Loading...'
-            : user.config && user.config.active_chart
+            : loggedIn && user.config && user.config.active_chart
                ? user.config.active_chart
                : 'Welcome';
 

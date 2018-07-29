@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import Switch from 'react-ios-switch';
-import color from '../../constants';
+import constants from '../../constants';
+
+const { color } = constants;
 
 const Container = styled.div`
    display: flex;

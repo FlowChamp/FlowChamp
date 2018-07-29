@@ -44,7 +44,7 @@ const Cover = styled.div`
    bottom: 0;
    left: 0;
    right: 0;
-   background: rgba(200,200,200,0.8);
+   background: rgba(0,0,0,0.3);
    z-index: -1;
    opacity: 0;
    pointer-events: none;

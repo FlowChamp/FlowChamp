@@ -26,6 +26,7 @@ const Title = styled.h2`
    font-size: 1.8em;
    margin: 0;
    margin-right: 8px;
+   padding-left: 8px;
    color: #4f4f4f;
 `;
 
