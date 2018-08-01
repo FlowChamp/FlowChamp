@@ -7,7 +7,9 @@ import { constants, Toggle } from '../../../toolbox';
 const { color } = constants;
 
 const Container = styled.div`
-   padding-bottom: 16px;
+   height: 60vh;
+   overflow: auto;
+   -webkit-overflow-scrolling: touch;
 `;
 
 const ToggleContainer = styled.div`
@@ -17,7 +19,7 @@ const ToggleContainer = styled.div`
 `;
 
 const Title = styled.h2`
-   margin: 0 16px 16px 16px;
+   margin: 8px 16px 16px 16px;
 `;
 
 const Subtitle = styled.h3`
@@ -40,7 +42,7 @@ const Course = styled.div`
    padding: 8px 0;
 
    &:nth-child(2n) {
-      background: ${color.grayAlpha[1]};
+      background: ${color.grayAlpha[2]};
    }
 `;
 

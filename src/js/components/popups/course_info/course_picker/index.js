@@ -19,7 +19,8 @@ const PickerContainer = styled.div`
    display: flex;
    border-top: 1px solid ${color.grayAlpha[2]};
    border-bottom: 1px solid ${color.grayAlpha[2]};
-   overflow-x: auto;
+   overflow: auto;
+   -webkit-overflow-scrolling: touch;
    height: 85%;
 `;
 
