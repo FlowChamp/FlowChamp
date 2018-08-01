@@ -24,6 +24,8 @@ const Container = styled.div`
 const Circle = styled.div`
    height: 2.5em;
    width: 2.5em;
+   max-height: 8vw;
+   max-width: 8vw;
    margin: 8px;
    background-color: ${props => color[props.type]};
    border: 1px solid ${color.grayAlpha[2]};
