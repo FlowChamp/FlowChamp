@@ -315,6 +315,9 @@ export const updateCourse = ({ config, course, year, quarter, index }) => {
                resolve(course);
             })
             .catch(error => {
+               alert(
+                  "Warning: we couldn't save your change. It is recommended that you refresh the page.",
+               );
                dispatch({
                   type: 'UPDATE_COURSE_FAILURE',
                });

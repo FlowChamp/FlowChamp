@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { constants } from '../../../../toolbox/';
+import { Icon, constants } from '../../../../toolbox/';
 
 const { color } = constants;
 
@@ -35,6 +35,18 @@ const CourseTitle = styled.h4`
 const UnitCount = styled.h4`
    margin: 0;
    font-weight: normal;
+`;
+
+const FlexRow = styled.div`
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   height: 13px;
+
+   svg {
+      height: 24px;
+      width: 24px;
+   }
 `;
 
 const BlockContents = ({ data }) => {
@@ -76,14 +88,17 @@ const BlockContents = ({ data }) => {
                      : 'Click to Specify'}
             </CourseTitle>
          </Body>
-         <UnitCount>
-            {multiCourse
-               ? multiCourseUnits
-               : hasCourseData
-                  ? `${course_data.units}`
-                  : 4}{' '}
-            Units
-         </UnitCount>
+         <FlexRow>
+            <UnitCount>
+               {multiCourse
+                  ? multiCourseUnits
+                  : hasCourseData
+                     ? `${course_data.units}`
+                     : 4}{' '}
+               Units
+            </UnitCount>
+            {multiCourse && <Icon name="list" />}
+         </FlexRow>
       </ContentContainer>
    );
 };

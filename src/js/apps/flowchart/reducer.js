@@ -66,9 +66,6 @@ const flowchartReducer = (state = initialState, action) => {
             chartData: newChartData,
          };
       case 'UPDATE_COURSE_FAILURE':
-         newChartData = state.chartData;
-         newChartData[action.year].quarters[action.quarter][action.index] =
-            action.course;
          return {
             ...state,
             prevChartData: null,
