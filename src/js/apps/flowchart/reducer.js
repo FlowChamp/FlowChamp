@@ -13,6 +13,7 @@ const initialState = {
    stockCharts: [],
    chartRevision: 0,
    chartData: [],
+   departmentData: [],
 };
 
 const flowchartReducer = (state = initialState, action) => {
@@ -70,6 +71,24 @@ const flowchartReducer = (state = initialState, action) => {
             ...state,
             prevChartData: null,
             chartData: state.prevChartData,
+         };
+      case 'GET_DEPARTMENTS_SUCCESS':
+         return {
+            ...state,
+            departmentData: action.departmentData,
+         };
+      case 'GET_COURSE_LIST_SUCCESS':
+         return {
+            ...state,
+            departmentData: state.departmentData.map((item, index) => {
+               return {
+                  name: item.name,
+                  courses:
+                     item.name === action.department
+                        ? action.courses
+                        : state.departmentData[index].courses,
+               };
+            }),
          };
       default:
          return state;

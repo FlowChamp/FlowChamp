@@ -17,13 +17,13 @@ const TitleContainer = styled.div`
    flex: 1;
 `;
 
-const Title = styled.h2`
-   margin: 16px;
+const Title = styled.h1`
+   margin: 24px 0 16px 24px;
    font-weight: bold;
 `;
 
 const Subtitle = styled.h3`
-   margin: 0 16px 16px 16px;
+   margin: 0 16px 8px 24px;
    font-weight: 300;
    color: rgba(0, 0, 0, 0.8);
 `;

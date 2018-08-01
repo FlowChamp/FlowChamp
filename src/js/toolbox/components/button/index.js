@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import constants from '../../constants';
 import Icon from '../icon';
 
@@ -8,8 +8,9 @@ const { color } = constants;
 const Container = styled.div`
    display: flex;
    min-height: 48px;
-   border-bottom: 1px solid ${color.gray[3]};
+   border-bottom: ${props => props.hideBorder || '1px solid ' + color.gray[3]};
    cursor: pointer;
+   padding: ${props => props.padding};
 
    &:active {
       background: ${color.gray[2]};
@@ -17,15 +18,15 @@ const Container = styled.div`
 `;
 
 const TextContainer = styled.div`
-   display: flex;
    flex: 1;
-   flex-direction: column;
-   justify-content: center;
-   white-space: nowrap;
-   overflow: hidden;
-   text-overflow: ellipsis;
 
-   h2,
+   ${props =>
+      !props.hasSublabel &&
+      css`
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+      `} h2,
    h4 {
       font-weight: normal;
       color: ${props =>
@@ -34,6 +35,9 @@ const TextContainer = styled.div`
             : color.black};
       color: ${props => props.isPlaying && color.red[4]};
       user-select: none;
+   }
+   h4 {
+      font-weight: 300;
    }
 `;
 
@@ -60,8 +64,6 @@ const OptionsContainer = styled.div`
 `;
 
 const ChevronContainer = styled.div`
-   height: 3em;
-   width: 3em;
    display: flex;
    justify-content: center;
    align-items: center;
@@ -79,6 +81,8 @@ const Button = ({
    label,
    sublabel,
    showIndex,
+   hideBorder,
+   padding,
    isPlaying,
    OptionsMenu,
    onClick,
@@ -91,8 +95,11 @@ const Button = ({
    };
 
    return (
-      <Container onClick={onClick}>
-         <TextContainer isPlaying={isPlaying} theme={theme}>
+      <Container onClick={onClick} hideBorder={hideBorder} padding={padding}>
+         <TextContainer
+            isPlaying={isPlaying}
+            theme={theme}
+            hasSublabel={!!sublabel}>
             <Label>{label}</Label>
             <SubLabel>{sublabel}</SubLabel>
          </TextContainer>
