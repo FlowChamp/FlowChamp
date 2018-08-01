@@ -5,7 +5,6 @@ import { updateCourse } from '../../../user/actions';
 import { constants, Toggle } from '../../../toolbox';
 
 const { color } = constants;
-console.log(color);
 
 const Container = styled.div`
    padding-bottom: 16px;
@@ -18,7 +17,7 @@ const ToggleContainer = styled.div`
 `;
 
 const Title = styled.h2`
-   margin: 16px;
+   margin: 0 16px 16px 16px;
 `;
 
 const Subtitle = styled.h3`
@@ -38,7 +37,7 @@ const BodyText = styled.h3`
 `;
 
 const Course = styled.div`
-   padding: 16px 0;
+   padding: 8px 0;
 
    &:nth-child(2n) {
       background: ${color.grayAlpha[1]};

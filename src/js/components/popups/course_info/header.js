@@ -53,6 +53,12 @@ const ActionContainer = styled.div`
    }
 `;
 
+const mapStateToProps = state => {
+   return {
+      flowchart: state.flowchart,
+   };
+};
+
 const mapDispatchToProps = dispatch => {
    return {
       popPopup: () => dispatch(popPopup()),
@@ -65,7 +71,8 @@ class Header extends Component {
    };
 
    render() {
-      const { data, closing } = this.props;
+      const { closing, year, quarter, blockIndex, flowchart } = this.props;
+      const data = flowchart.chartData[year].quarters[quarter][blockIndex];
       const { block_metadata, course_data } = data;
       const { course_type } = block_metadata;
       const multiCourse = Array.isArray(course_data);
@@ -83,7 +90,7 @@ class Header extends Component {
                </Title>
                <Subtitle>
                   {multiCourse
-                     ? 'Select a course from the following list:'
+                     ? `Select a predetermined course from the following list:`
                      : hasCourseData
                         ? `${course_data.title}`
                         : `Select a ${
@@ -107,4 +114,4 @@ class Header extends Component {
    }
 }
 
-export default connect(null, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

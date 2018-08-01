@@ -16,6 +16,7 @@ const initialState = {
 };
 
 const flowchartReducer = (state = initialState, action) => {
+   let newChartData;
    switch (action.type) {
       case STOCK_CHART_SUCCESS:
          return {
@@ -55,13 +56,23 @@ const flowchartReducer = (state = initialState, action) => {
             ...state,
             chartData: action.chartData,
          };
-      case 'UPDATE_COURSE_SUCCESS':
-         let newChartData = state.chartData;
+      case 'UPDATE_COURSE_REQUEST':
+         newChartData = state.chartData;
          newChartData[action.year].quarters[action.quarter][action.index] =
             action.course;
          return {
             ...state,
+            prevChartData: state.chartData,
             chartData: newChartData,
+         };
+      case 'UPDATE_COURSE_FAILURE':
+         newChartData = state.chartData;
+         newChartData[action.year].quarters[action.quarter][action.index] =
+            action.course;
+         return {
+            ...state,
+            prevChartData: null,
+            chartData: state.prevChartData,
          };
       default:
          return state;

@@ -301,6 +301,10 @@ export const updateCourse = ({ config, course, year, quarter, index }) => {
       dispatch(
          dispatch({
             type: 'UPDATE_COURSE_REQUEST',
+            course,
+            year,
+            quarter,
+            index,
          }),
       );
 
@@ -308,17 +312,12 @@ export const updateCourse = ({ config, course, year, quarter, index }) => {
          user
             .updateCourse(course)
             .then(response => {
-               dispatch({
-                  type: 'UPDATE_COURSE_SUCCESS',
-                  course,
-                  year,
-                  quarter,
-                  index
-               });
-               console.log("Success! Course updated");
                resolve(course);
             })
             .catch(error => {
+               dispatch({
+                  type: 'UPDATE_COURSE_FAILURE',
+               });
                reject(error);
             });
       });

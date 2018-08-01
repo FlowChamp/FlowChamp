@@ -6,6 +6,7 @@ import { constants } from '../../../toolbox';
 import Header from './header';
 import Info from './info';
 import MultiCourseInfo from './multi_info';
+import ColorPicker from './colors';
 
 const { color, animation } = constants;
 const { fadeIn, fadeOut, menuOpen, menuClose } = animation;
@@ -66,7 +67,8 @@ class CourseInfoPopup extends Component {
          <Container index={index}>
             <Cover closing={closing} onClick={this.close} />
             <Modal closing={closing}>
-               <Header data={data} />
+               <Header {...this.props} />
+               <ColorPicker {...this.props} />
                {multiCourse ? (
                   <MultiCourseInfo {...this.props} />
                ) : hasCourseData ? (
