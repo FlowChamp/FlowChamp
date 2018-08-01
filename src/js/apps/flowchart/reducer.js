@@ -55,16 +55,13 @@ const flowchartReducer = (state = initialState, action) => {
             ...state,
             chartData: action.chartData,
          };
-      case 'TOGGLE_MULTI_COURSE':
+      case 'UPDATE_COURSE_SUCCESS':
          let newChartData = state.chartData;
-         newChartData[action.year].quarters[action.quarter][
-            action.blockIndex
-         ].course_data =
-            action.course_data;
-
+         newChartData[action.year].quarters[action.quarter][action.index] =
+            action.course;
          return {
             ...state,
-            chartData: newChartData
+            chartData: newChartData,
          };
       default:
          return state;

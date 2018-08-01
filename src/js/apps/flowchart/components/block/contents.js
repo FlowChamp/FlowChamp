@@ -48,7 +48,7 @@ const BlockContents = ({ data }) => {
    if (multiCourse) {
       for (let course of course_data) {
          multiCourseUnits = course.units;
-         if (course.isActive) {
+         if (course._id === block_metadata.activeId) {
             multiCourseData = course;
          }
       }

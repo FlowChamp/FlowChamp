@@ -293,3 +293,34 @@ export const deleteChart = (config, name) => {
          });
    };
 };
+
+export const updateCourse = ({ config, course, year, quarter, index }) => {
+   return dispatch => {
+      const user = new UserManager(config);
+
+      dispatch(
+         dispatch({
+            type: 'UPDATE_COURSE_REQUEST',
+         }),
+      );
+
+      return new Promise((resolve, reject) => {
+         user
+            .updateCourse(course)
+            .then(response => {
+               dispatch({
+                  type: 'UPDATE_COURSE_SUCCESS',
+                  course,
+                  year,
+                  quarter,
+                  index
+               });
+               console.log("Success! Course updated");
+               resolve(course);
+            })
+            .catch(error => {
+               reject(error);
+            });
+      });
+   };
+};

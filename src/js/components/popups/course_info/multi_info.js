@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { toggleMultiCourse } from '../../../apps/flowchart/actions';
+import { updateCourse } from '../../../user/actions';
 import { constants, Toggle } from '../../../toolbox';
 
 const { color } = constants;
@@ -47,25 +47,32 @@ const Course = styled.div`
 
 const mapStateToProps = state => {
    return {
-      flowchart: state.flowchart
-   }
-}
+      user: state.user,
+      flowchart: state.flowchart,
+   };
+};
 
 const mapDispatchToProps = dispatch => {
    return {
-      toggleMultiCourse: payload => dispatch(toggleMultiCourse(payload)),
+      updateCourse: payload => dispatch(updateCourse(payload)),
    };
 };
 
 class MultiCourseInfo extends Component {
    handleChange = (id, value) => {
-      this.props.toggleMultiCourse({
-         id,
-         value,
-         data: this.props.data,
-         year: this.props.year,
-         quarter: this.props.quarter,
-         blockIndex: this.props.blockIndex,
+      const { user, flowchart, year, quarter, blockIndex } = this.props;
+      const { config } = user;
+      let data = flowchart.chartData[year].quarters[quarter][blockIndex];
+
+      const newCourse = data;
+      newCourse.block_metadata.activeId = !!value ? id : null;
+
+      this.props.updateCourse({
+         config,
+         course: newCourse,
+         year,
+         quarter,
+         index: blockIndex
       });
    };
 
@@ -85,7 +92,7 @@ class MultiCourseInfo extends Component {
                      <ToggleContainer>
                         <Toggle
                            label="Selected "
-                           checked={!!course.isActive}
+                           checked={course._id === block_metadata.activeId}
                            onChange={val => this.handleChange(course._id, val)}
                         />
                      </ToggleContainer>

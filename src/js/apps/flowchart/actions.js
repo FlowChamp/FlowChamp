@@ -109,26 +109,3 @@ export const fetchUserCharts = config => {
          });
    };
 };
-
-export const toggleMultiCourse = payload => {
-   return dispatch => {
-      const { data } = payload;
-      const { course_data } = data;
-
-      const newCourseData = course_data.map(course => {
-         if (course._id === payload.id) {
-            course.isActive = payload.value;
-         } else {
-            course.isActive = false;
-         }
-         return course;
-      });
-      dispatch({
-         type: 'TOGGLE_MULTI_COURSE',
-         ...payload,
-         year: parseInt(payload.year, 10),
-         quarter: parseInt(payload.quarter, 10),
-         course_data: newCourseData,
-      });
-   };
-};
