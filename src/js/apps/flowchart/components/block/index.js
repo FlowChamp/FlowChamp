@@ -15,17 +15,12 @@ const OuterContainer = styled.div`
          transform: translateX(-20%);
          opacity: 0;
          pointer-events: none;
-      `} @keyframes slideReveal {
+      `}
+
+   @keyframes slideReveal {
       0% {
          opacity: 0;
          transform: translateX(20%);
-      }
-   }
-
-   @keyframes slideLeave {
-      100% {
-         opacity: 0;
-         transform: translateX(-20%);
       }
    }
 `;

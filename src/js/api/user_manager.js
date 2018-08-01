@@ -9,7 +9,6 @@ export default class UserManager {
 
    logIn = credentials => {
       const { username, password } = credentials;
-      console.log(username, password);
 
       return this.makeRequest({
          url: `${this.url}/authorize`,

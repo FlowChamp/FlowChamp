@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { moveBlock } from '../actions';
+import { updateCourse } from '../../../user/actions';
 import { DragDropContext } from 'react-beautiful-dnd';
 import Year from './year';
 import { constants } from '../../../toolbox';
@@ -9,10 +10,21 @@ import { constants } from '../../../toolbox';
 const { animation } = constants;
 const { fadeIn } = animation;
 
+const seasons = ['Fall', 'Winter', 'Spring', 'Summer'];
+
 const YearContainer = styled.div`
    display: ${props => (props.hide ? 'none' : 'flex')};
    animation: ${fadeIn} 0.5s ease;
 `;
+
+const mapStateToProps = state => ({
+   user: state.user,
+});
+
+const mapDispatchToProps = dispatch => ({
+   moveBlock: coords => dispatch(moveBlock(coords)),
+   updateCourse: payload => dispatch(updateCourse(payload)),
+});
 
 class Board extends Component {
    constructor(props) {
@@ -31,7 +43,8 @@ class Board extends Component {
    }
 
    handleDragEnd = ({ source, destination, type }) => {
-      const { data } = this.props;
+      const { data, user } = this.props;
+      const { config } = user;
 
       // dropped outside the list
       if (!destination) {
@@ -44,6 +57,24 @@ class Board extends Component {
          source.index !== destination.index ||
          source.droppableId !== destination.droppableId
       ) {
+         const [sourceYear, sourceQuarter] = source.droppableId.split('-');
+         const [destYear, destQuarter] = destination.droppableId.split('-');
+
+         let course = data[sourceYear].quarters[sourceQuarter][source.index];
+
+         course.block_metadata.time = [
+            parseInt(destYear, 10) + 1,
+            seasons[destQuarter],
+         ];
+
+         this.props.updateCourse({
+            config,
+            course,
+            year: sourceYear,
+            quarter: sourceQuarter,
+            index: source.index,
+         });
+
          this.props.moveBlock({
             chartData: data,
             sourceQuarterId: source.droppableId,
@@ -82,13 +113,5 @@ class Board extends Component {
       );
    };
 }
-
-const mapStateToProps = state => ({
-   user: state.user,
-});
-
-const mapDispatchToProps = dispatch => ({
-   moveBlock: coords => dispatch(moveBlock(coords)),
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Board);

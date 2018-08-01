@@ -33,9 +33,14 @@ const Units = styled.h3`
    font-weight: 200;
 `;
 
+const CourseType = styled.h3`
+   margin: 0 16px 0 0;
+   font-weight: 200;
+`;
+
 const ActionContainer = styled.div`
    flex: 1;
-   max-width: 5em;
+   max-width: 10em;
    text-align: right;
 
    svg {
@@ -71,7 +76,7 @@ class Header extends Component {
    };
 
    render() {
-      const { closing, year, quarter, blockIndex, flowchart } = this.props;
+      const { year, quarter, blockIndex, flowchart } = this.props;
       const data = flowchart.chartData[year].quarters[quarter][blockIndex];
       const { block_metadata, course_data } = data;
       const { course_type } = block_metadata;
@@ -100,6 +105,7 @@ class Header extends Component {
             </TitleContainer>
             <ActionContainer>
                <Icon name="x" onClick={this.props.popPopup} />
+               <CourseType>{block_metadata.course_type}</CourseType>
                <Units>
                   {multiCourse
                      ? '4'

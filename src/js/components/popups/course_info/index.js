@@ -58,7 +58,7 @@ class CourseInfoPopup extends Component {
    };
 
    render() {
-      const { index, closing, options, data } = this.props;
+      const { index, closing, data } = this.props;
       const { course_data } = data;
       const multiCourse = Array.isArray(course_data);
       const hasCourseData = course_data !== undefined;
