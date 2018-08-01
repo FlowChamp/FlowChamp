@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Header from './components/header';
 import Sidebar from './components/sidebar/index';
 import Flowchart from './apps/flowchart';
+import PopupContainer from './components/popups';
 import { fetchUserConfig } from './user/actions';
 
 const AppContainer = styled.div`
@@ -64,6 +65,7 @@ class FlowChamp extends Component {
          <AppContainer>
             <Header />
             <Sidebar />
+            <PopupContainer />
             <ViewContainer sidebarOpen={sidebar.isOpen}>
                {this.getCurrentView()}
             </ViewContainer>
