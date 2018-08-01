@@ -13,6 +13,20 @@ export default class ApiManager {
       });
    };
 
+   getDepartments = () => {
+      return this.makeRequest({
+         url: `${this.url}/courses`,
+         data: {}
+      });
+   }
+
+   getCourses = department => {
+      return this.makeRequest({
+         url: `${this.url}/catalog/${department}`,
+         data: {}
+      });
+   }
+
    makeRequest(options) {
       const { url, data } = options;
 

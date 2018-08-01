@@ -7,6 +7,7 @@ import Header from './header';
 import Info from './info';
 import MultiCourseInfo from './multi_info';
 import ColorPicker from './colors';
+import CoursePicker from './course_picker';
 
 const { color, animation } = constants;
 const { fadeIn, fadeOut, menuOpen, menuClose } = animation;
@@ -74,7 +75,7 @@ class CourseInfoPopup extends Component {
                ) : hasCourseData ? (
                   <Info {...this.props} />
                ) : (
-                  `Select a course below:`
+                  <CoursePicker {...this.props} />
                )}
             </Modal>
          </Container>

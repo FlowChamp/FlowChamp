@@ -100,3 +100,61 @@ export const fetchUserCharts = config => {
          });
    };
 };
+
+export const fetchDepartments = () => {
+   return dispatch => {
+      const api = new ApiManager();
+
+      return new Promise((resolve, reject) => {
+         api
+            .getDepartments()
+            .then(response => {
+               const departmentData = response.departments.map(dept => {
+                  return {
+                     name: dept,
+                     courses: [],
+                  };
+               });
+
+               dispatch({
+                  type: 'GET_DEPARTMENTS_SUCCESS',
+                  departmentData,
+               });
+               resolve(response.departments);
+            })
+            .catch(error => {
+               console.log('ERROR', error);
+               dispatch({
+                  type: 'GET_DEPARTMENTS_FAILURE',
+                  error,
+               });
+            });
+      });
+   };
+};
+
+export const fetchCourses = department => {
+   return dispatch => {
+      const api = new ApiManager();
+
+      return new Promise((resolve, reject) => {
+         api
+            .getCourses(department)
+            .then(courses => {
+               dispatch({
+                  type: 'GET_COURSE_LIST_SUCCESS',
+                  department,
+                  courses,
+               });
+               resolve(courses);
+            })
+            .catch(error => {
+               console.log('ERROR', error);
+               dispatch({
+                  type: 'GET_COURSE_LIST_FAILURE',
+                  error,
+               });
+            });
+      });
+   };
+};
