@@ -293,3 +293,36 @@ export const deleteChart = (config, name) => {
          });
    };
 };
+
+export const updateCourse = ({ config, course, year, quarter, index }) => {
+   return dispatch => {
+      const user = new UserManager(config);
+
+      dispatch(
+         dispatch({
+            type: 'UPDATE_COURSE_REQUEST',
+            course,
+            year,
+            quarter,
+            index,
+         }),
+      );
+
+      return new Promise((resolve, reject) => {
+         user
+            .updateCourse(course)
+            .then(response => {
+               resolve(course);
+            })
+            .catch(error => {
+               alert(
+                  "Warning: we couldn't save your change. It is recommended that you refresh the page.",
+               );
+               dispatch({
+                  type: 'UPDATE_COURSE_FAILURE',
+               });
+               reject(error);
+            });
+      });
+   };
+};

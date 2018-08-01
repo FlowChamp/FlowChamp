@@ -2,6 +2,10 @@ export default {
    'General Ed': '#6cff92',
    Support: '#fDDAB6',
    Major: '#FFFF99',
+   Minor: '#EEAEEE',
+   Concentration: '#EA80FC',
+   Free: 'lightskyblue',
+   Blank: '#f1f1f1',
    blue: [
       '#EBF4FB',
       '#D6E8F7',

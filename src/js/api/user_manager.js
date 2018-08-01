@@ -9,7 +9,6 @@ export default class UserManager {
 
    logIn = credentials => {
       const { username, password } = credentials;
-      console.log(username, password);
 
       return this.makeRequest({
          url: `${this.url}/authorize`,
@@ -113,6 +112,25 @@ export default class UserManager {
             credentials: this.credentials,
             mode: this.mode,
             body: JSON.stringify(newConfig),
+         },
+      });
+   }
+
+   updateCourse(course) {
+      const { active_chart, username } = this.config;
+      const { block_metadata } = course;
+      const { _id } = block_metadata;
+
+      return this.makeRequest({
+         url: `${this.url}/users/${username}/charts/${active_chart}/${_id}`,
+         data: {
+            method: 'PUT',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            credentials: this.credentials,
+            mode: this.mode,
+            body: JSON.stringify(block_metadata),
          },
       });
    }

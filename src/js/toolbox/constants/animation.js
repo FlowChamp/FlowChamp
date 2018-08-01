@@ -36,4 +36,18 @@ export default {
          transform: translateY(100vh);
       }
       `,
+
+   menuOpen: keyframes`
+		0% {
+			opacity: 0;
+			transform: translateY(5%);
+		}
+	`,
+
+   menuClose: keyframes`
+		100% {
+			opacity: 0;
+			transform: translateY(-5%);
+		}
+	`,
 };

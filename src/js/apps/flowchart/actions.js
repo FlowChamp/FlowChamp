@@ -9,6 +9,7 @@ import {
 } from './constants';
 
 export const moveBlock = ({
+   config,
    chartData,
    sourceQuarterId,
    destQuarterId,
@@ -17,14 +18,9 @@ export const moveBlock = ({
    boardId,
 }) => {
    return dispatch => {
-      const sourceQuarterSplit = sourceQuarterId.split('-');
-      const sourceYear = sourceQuarterSplit[0];
-      const sourceQuarter = sourceQuarterSplit[1];
-
-      const destQuarterSplit = destQuarterId.split('-');
-      const destYear = destQuarterSplit[0];
-      const destQuarter = destQuarterSplit[1];
-      console.log('Destination: ', destYear, destQuarter);
+      const [sourceYear, sourceQuarter] = sourceQuarterId.split('-');
+      const [destYear, destQuarter] = destQuarterId.split('-');
+      let newChartData;
 
       // Move within the same list
       if (sourceQuarterId === destQuarterId) {
@@ -34,13 +30,8 @@ export const moveBlock = ({
          // Block being moved
          const [removedBlock] = newBlocks.splice(oldBlockIndex, 1);
          newBlocks.splice(newBlockIndex, 0, removedBlock);
-         const newChartData = chartData;
+         newChartData = chartData;
          newChartData[destYear].quarters[destQuarter] = newBlocks;
-
-         dispatch({
-            type: 'MOVE_BLOCK',
-            chartData: newChartData,
-         });
       } else {
          const sourceBlocks = Array.from(
             chartData[sourceYear].quarters[sourceQuarter],
@@ -50,15 +41,15 @@ export const moveBlock = ({
             chartData[destYear].quarters[destQuarter],
          );
          destBlocks.splice(newBlockIndex, 0, removedBlock);
-         const newChartData = chartData;
+         newChartData = chartData;
          newChartData[sourceYear].quarters[sourceQuarter] = sourceBlocks;
          newChartData[destYear].quarters[destQuarter] = destBlocks;
-
-         dispatch({
-            type: 'MOVE_BLOCK',
-            chartData: newChartData,
-         });
       }
+
+      dispatch({
+         type: 'MOVE_BLOCK',
+         chartData: newChartData,
+      });
    };
 };
 

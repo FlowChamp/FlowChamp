@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Draggable } from 'react-beautiful-dnd';
 import styled, { css } from 'styled-components';
+import { pushPopup } from '../../../../components/popups/actions';
 import BlockContents from './contents';
 import './index.css';
 
@@ -14,17 +15,12 @@ const OuterContainer = styled.div`
          transform: translateX(-20%);
          opacity: 0;
          pointer-events: none;
-      `} @keyframes slideReveal {
+      `}
+
+   @keyframes slideReveal {
       0% {
          opacity: 0;
          transform: translateX(20%);
-      }
-   }
-
-   @keyframes slideLeave {
-      100% {
-         opacity: 0;
-         transform: translateX(-20%);
       }
    }
 `;
@@ -35,17 +31,27 @@ const mapStateToProps = state => {
    };
 };
 
+const mapDispatchToProps = dispatch => {
+   return {
+      pushPopup: popup => dispatch(pushPopup(popup)),
+   }
+}
+
 class Block extends Component {
    state = {
       shouldAnimate: true,
    };
 
-   toggleCardEditor = () => {
-      /* CHANGE THIS WITH A DIFFERENT MODAL */
-   };
-
-   handleClick = event => {
-      this.toggleCardEditor(event);
+   handleClick = (quarterId, index) => {
+      this.props.pushPopup({
+         name: 'CourseInfo',
+         props: {
+            data: this.props.data,
+            year: quarterId.split('-')[0],
+            quarter: quarterId.split('-')[1],
+            blockIndex: index
+         }
+      });
    };
 
    handleKeyDown = event => {
@@ -63,7 +69,7 @@ class Block extends Component {
    }
 
    render() {
-      const { flowchart, blockId, index, data, isDraggingOver } = this.props;
+      const { flowchart, blockId, quarterId, index, data, isDraggingOver } = this.props;
       const { fetching } = flowchart;
       const { shouldAnimate } = this.state;
 
@@ -82,10 +88,7 @@ class Block extends Component {
                      }}
                      {...provided.dragHandleProps}
                      {...provided.draggableProps}
-                     onClick={event => {
-                        provided.dragHandleProps.onClick(event);
-                        this.handleClick(event);
-                     }}
+                     onClick={() => this.handleClick(quarterId, index)}
                      onKeyDown={event => {
                         provided.dragHandleProps.onKeyDown(event);
                         this.handleKeyDown(event);
@@ -104,4 +107,4 @@ class Block extends Component {
    }
 }
 
-export default connect(mapStateToProps)(Block);
+export default connect(mapStateToProps, mapDispatchToProps)(Block);

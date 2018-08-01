@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { constants } from '../../../../toolbox/';
+import { Icon, constants } from '../../../../toolbox/';
 
 const { color } = constants;
 
@@ -37,17 +37,42 @@ const UnitCount = styled.h4`
    font-weight: normal;
 `;
 
+const FlexRow = styled.div`
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   height: 13px;
+
+   svg {
+      height: 24px;
+      width: 24px;
+   }
+`;
+
 const BlockContents = ({ data }) => {
    const { block_metadata, course_data } = data;
 
    const multiCourse = Array.isArray(course_data);
    const hasCourseData = course_data !== undefined;
+   let multiCourseData = null;
+   let multiCourseUnits = 4;
+
+   if (multiCourse) {
+      for (let course of course_data) {
+         multiCourseUnits = course.units;
+         if (course._id === block_metadata.activeId) {
+            multiCourseData = course;
+         }
+      }
+   }
 
    return (
       <ContentContainer color={block_metadata.course_type}>
          <Header>
             {multiCourse
-               ? 'Multi Course'
+               ? multiCourseData
+                  ? `${multiCourseData.dept} ${multiCourseData.course_number}`
+                  : 'Multi Course'
                : hasCourseData
                   ? `${course_data.dept} ${course_data.course_number}`
                   : block_metadata.course_type}
@@ -55,34 +80,27 @@ const BlockContents = ({ data }) => {
          <Body>
             <CourseTitle>
                {multiCourse
-                  ? 'Click to Specify'
+                  ? multiCourseData
+                     ? multiCourseData.title
+                     : 'Click to Specify'
                   : hasCourseData
                      ? `${course_data.title}`
                      : 'Click to Specify'}
             </CourseTitle>
          </Body>
-         <UnitCount>
-            {multiCourse
-               ? '4'
-               : hasCourseData
-                  ? `${course_data.units}`
-                  : 4} Units
-         </UnitCount>
+         <FlexRow>
+            <UnitCount>
+               {multiCourse
+                  ? multiCourseUnits
+                  : hasCourseData
+                     ? `${course_data.units}`
+                     : 4}{' '}
+               Units
+            </UnitCount>
+            {multiCourse && <Icon name="list" />}
+         </FlexRow>
       </ContentContainer>
    );
 };
 
 export default BlockContents;
-
-/*
-
-      <ContentContainer color={block_metadata.course_type}>
-         <Header>
-            {multiCourse ? 'Multi Course' : `${dept} ${course_number}`}
-         </Header>
-         <Body>
-            <CourseTitle>{multiCourse ? 'Multi' : `${title}`}</CourseTitle>
-         </Body>
-         <UnitCount>{multiCourse ? '4 Units' : `${units} units`}</UnitCount>
-      </ContentContainer>
- * */
