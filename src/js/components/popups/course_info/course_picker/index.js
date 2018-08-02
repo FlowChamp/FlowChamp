@@ -2,16 +2,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { updateCourse } from '../../../../user/actions';
+import { popPopup } from '../../actions';
 import { constants } from '../../../../toolbox';
 import DepartmentSelector from './department';
 import CourseSelector from './course_list';
 import CoursePreview from './preview';
 
-const { animation, color } = constants;
+const { animation, color, breakpoint } = constants;
 const { fadeIn } = animation;
 
 const Container = styled.div`
-   height: 47vh;
+   height: 46vh;
+   display: flex;
+   flex-direction: column;
+
+   ${breakpoint.mobile} {
+      height: 75vh;
+   }
 `;
 
 const PickerContainer = styled.div`
@@ -21,7 +28,7 @@ const PickerContainer = styled.div`
    border-bottom: 1px solid ${color.grayAlpha[2]};
    overflow: auto;
    -webkit-overflow-scrolling: touch;
-   height: 85%;
+   flex: 1;
 `;
 
 const Pane = styled.div`
@@ -35,7 +42,7 @@ const Pane = styled.div`
 `;
 
 const ActionBar = styled.div`
-   height: 15%;
+   height: 4em;
    display: flex;
    justify-content: flex-end;
    align-items: center;
@@ -59,11 +66,12 @@ const ActionButton = styled.button`
       background: ${color.blue[5]};
    }
 
-   ${props => props.disabled && css`
-      filter: grayscale(1);
-      background: ${color.blue[2]};
-      pointer-events: none;
-   `}
+   ${props =>
+      props.disabled &&
+      css`
+         filter: grayscale(1);
+         background: ${color.blue[2]};
+      `};
 `;
 
 const mapStateToProps = state => {
@@ -76,6 +84,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
    return {
       updateCourse: payload => dispatch(updateCourse(payload)),
+      popPopup: () => dispatch(popPopup()),
    };
 };
 
@@ -102,6 +111,12 @@ class CoursePicker extends Component {
       );
    }
 
+   chooseCourse = () => {
+      const { course } = this.state;
+      console.log(course);
+      this.props.popPopup();
+   }
+
    updateCourse = (id, value) => {
       const { user, flowchart, year, quarter, blockIndex } = this.props;
       const { config } = user;
@@ -119,6 +134,22 @@ class CoursePicker extends Component {
       });
    };
 
+   componentDidUpdate(prevProps, prevState) {
+      console.log(prevProps, prevState);
+      if (
+         prevState.department !== this.state.department ||
+         prevState.course !== this.state.course
+      ) {
+         // if path changed,
+         // scroll to right edge
+         document.getElementById('pickerContainer').scroll({
+            top: 0,
+            left: document.getElementById('pickerContainer').scrollWidth,
+            behavior: 'smooth',
+         });
+      }
+   }
+
    render() {
       const { year, quarter, blockIndex, flowchart } = this.props;
       const data = flowchart.chartData[year].quarters[quarter][blockIndex];
@@ -127,7 +158,7 @@ class CoursePicker extends Component {
 
       return (
          <Container>
-            <PickerContainer>
+            <PickerContainer id="pickerContainer">
                <Pane>
                   <DepartmentSelector
                      {...this.state}
@@ -154,9 +185,8 @@ class CoursePicker extends Component {
             </PickerContainer>
 
             <ActionBar>
-               <ActionButton disabled={!course}>
-                  Choose Course
-               </ActionButton>
+            <ActionButton disabled={!course}
+            onClick={this.chooseCourse}>Choose Course</ActionButton>
             </ActionBar>
          </Container>
       );

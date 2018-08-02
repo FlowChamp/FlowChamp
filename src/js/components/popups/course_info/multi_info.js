@@ -4,12 +4,16 @@ import styled from 'styled-components';
 import { updateCourse } from '../../../user/actions';
 import { constants, Toggle } from '../../../toolbox';
 
-const { color } = constants;
+const { color, breakpoint } = constants;
 
 const Container = styled.div`
-   height: 47vh;
+   height: 46vh;
    overflow: auto;
    -webkit-overflow-scrolling: touch;
+
+   ${breakpoint.mobile} {
+      height: 75vh
+   }
 `;
 
 const ToggleContainer = styled.div`

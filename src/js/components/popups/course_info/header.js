@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { popPopup } from '../actions';
 import { Icon, constants } from '../../../toolbox';
 
-const { color } = constants;
+const { color, breakpoint } = constants;
 
 const Container = styled.div`
    position: relative;
@@ -20,6 +20,10 @@ const TitleContainer = styled.div`
 const Title = styled.h1`
    margin: 24px 0 16px 24px;
    font-weight: bold;
+
+   ${breakpoint.mobile} {
+      font-size: 1.25rem;
+   }
 `;
 
 const Subtitle = styled.h3`
@@ -39,7 +43,6 @@ const CourseType = styled.h3`
 `;
 
 const ActionContainer = styled.div`
-   flex: 1;
    max-width: 10em;
    text-align: right;
 

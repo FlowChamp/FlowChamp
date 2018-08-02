@@ -9,7 +9,7 @@ import MultiCourseInfo from './multi_info';
 import ColorPicker from './colors';
 import CoursePicker from './course_picker';
 
-const { color, animation } = constants;
+const { color, breakpoint, animation } = constants;
 const { fadeIn, fadeOut, menuOpen, menuClose } = animation;
 
 const Container = styled.div`
@@ -32,6 +32,7 @@ const Cover = styled.div`
    left: 0;
    right: 0;
    background: ${color.grayAlpha[5]};
+   cursor: pointer;
    animation: ${props => (props.closing ? fadeOut : fadeIn)} 0.3s ease;
 `;
 
@@ -43,6 +44,13 @@ const Modal = styled.div`
    margin: auto;
    background: white;
    animation: ${props => (props.closing ? menuClose : menuOpen)} 0.3s ease;
+
+   ${breakpoint.mobile} {
+      height: 100%;
+      width: 100%;
+      max-height: none;
+      max-width: none;
+   }
 `;
 
 const mapDispatchToProps = dispatch => {

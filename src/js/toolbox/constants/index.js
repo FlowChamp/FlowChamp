@@ -1,9 +1,9 @@
 /*
 import borderRadius from './borderRadius';
-import breakpoint from './breakpoint';
 */
 import color from './color';
 import animation from './animation';
+import breakpoint from './breakpoint';
 /*
 import fontSize from './fontSize';
 import lineHeight from './lineHeight';
@@ -18,7 +18,8 @@ export default {
    breakpoint,
 */
    color,
-   animation
+   animation,
+   breakpoint,
 /*
    fontSize,
    lineHeight,
