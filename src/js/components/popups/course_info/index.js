@@ -43,8 +43,6 @@ const Modal = styled.div`
    margin: auto;
    background: white;
    animation: ${props => (props.closing ? menuClose : menuOpen)} 0.3s ease;
-   overflow: auto;
-   -webkit-overflow-scrolling: touch;
 `;
 
 const mapDispatchToProps = dispatch => {

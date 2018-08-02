@@ -11,7 +11,7 @@ const { animation, color } = constants;
 const { fadeIn } = animation;
 
 const Container = styled.div`
-   height: 60vh;
+   height: 47vh;
 `;
 
 const PickerContainer = styled.div`

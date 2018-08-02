@@ -23,7 +23,7 @@ const Body = styled.div`
    align-items: flex-start;
    flex: 1;
    overflow: auto;
-   padding-bottom: 5px;
+   margin-bottom: 6px;
 `;
 
 const CourseTitle = styled.h4`
