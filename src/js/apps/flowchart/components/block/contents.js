@@ -51,6 +51,7 @@ const FlexRow = styled.div`
 
 const BlockContents = ({ data }) => {
    const { block_metadata, course_data } = data;
+   const { elective_title, course_type } = block_metadata;
 
    const multiCourse = Array.isArray(course_data);
    const hasCourseData = course_data !== undefined;
@@ -75,7 +76,7 @@ const BlockContents = ({ data }) => {
                   : 'Multi Course'
                : hasCourseData
                   ? `${course_data.dept} ${course_data.course_number}`
-                  : block_metadata.course_type}
+                  : elective_title || course_type}
          </Header>
          <Body>
             <CourseTitle>

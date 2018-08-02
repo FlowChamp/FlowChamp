@@ -79,7 +79,7 @@ class Header extends Component {
       const { year, quarter, blockIndex, flowchart } = this.props;
       const data = flowchart.chartData[year].quarters[quarter][blockIndex];
       const { block_metadata, course_data } = data;
-      const { course_type } = block_metadata;
+      const { course_type, elective_title } = block_metadata;
       const multiCourse = Array.isArray(course_data);
       const hasCourseData = course_data !== undefined;
 
@@ -91,7 +91,7 @@ class Header extends Component {
                      ? 'Multiple Courses Available'
                      : hasCourseData
                         ? `${course_data.dept} ${course_data.course_number}`
-                        : block_metadata.course_type}
+                        : elective_title || block_metadata.course_type}
                </Title>
                <Subtitle>
                   {multiCourse
