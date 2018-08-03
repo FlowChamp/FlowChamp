@@ -99,8 +99,7 @@ const flowchartReducer = (state = initialState, action) => {
          quarter = Array.from(
             newChartData[action.year].quarters[action.quarter],
          );
-         const course = quarter[action.index];
-         delete newIdList[course.course_data._id];
+         delete newIdList[action.course.course_data._id];
 
          newChartData[action.year].quarters[action.quarter] = [
             ...quarter.slice(0, action.index),

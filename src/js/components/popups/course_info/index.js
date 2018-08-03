@@ -123,13 +123,16 @@ class CourseInfoPopup extends Component {
       const { block_metadata } = data;
       const { config } = user;
 
-      this.props.deleteCourse({
-         config,
-         year,
-         quarter,
-         blockIndex,
-         id: block_metadata._id,
-      });
+      this.props.popPopup();
+      setTimeout(() => {
+         this.props.deleteCourse({
+            config,
+            year,
+            quarter,
+            blockIndex,
+            course: data,
+         });
+      }, 350);
    };
 
    chooseCourse(course_data) {

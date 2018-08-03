@@ -350,22 +350,20 @@ export const addCourse = ({ config, quarterId, course_type, course_data }) => {
          .replace(/-/g, '/')}`,
       time: [year + 1, seasons[quarter]],
    };
-   const course = { course_data, block_metadata };
 
    return dispatch => {
       const user = new UserManager(config);
-
-      dispatch({
-         type: 'ADD_COURSE_REQUEST',
-         year,
-         quarter,
-         course,
-      });
 
       return new Promise((resolve, reject) => {
          user
             .addCourse(block_metadata)
             .then(course => {
+               dispatch({
+                  type: 'ADD_COURSE_REQUEST',
+                  year,
+                  quarter,
+                  course,
+               });
                resolve(course);
             })
             .catch(error => {
@@ -379,7 +377,7 @@ export const addCourse = ({ config, quarterId, course_type, course_data }) => {
    };
 };
 
-export const deleteCourse = ({ config, id, year, quarter, blockIndex }) => {
+export const deleteCourse = ({ config, course, year, quarter, blockIndex }) => {
    return dispatch => {
       const user = new UserManager(config);
 
@@ -388,11 +386,12 @@ export const deleteCourse = ({ config, id, year, quarter, blockIndex }) => {
             type: 'DELETE_COURSE_REQUEST',
             year,
             quarter,
+            course,
             index: blockIndex,
          });
 
          user
-            .deleteCourse(id)
+            .deleteCourse(course.block_metadata._id)
             .then(response => {
                resolve();
             })

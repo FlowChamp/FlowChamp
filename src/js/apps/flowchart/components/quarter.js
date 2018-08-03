@@ -133,11 +133,11 @@ class Quarter extends Component {
                   <div ref={provided.innerRef} style={{ height: '100%' }}>
                      {blocks.map((block, index) => {
                         const { block_metadata } = block;
-                        const { _id } = block_metadata;
+                        const { catalog_id, _id } = block_metadata;
 
                         return (
                            <CourseBlock
-                              key={_id}
+                              key={`${catalog_id}-${block_metadata._id}`}
                               isDraggingOver={isDraggingOver}
                               blockId={_id}
                               index={index}

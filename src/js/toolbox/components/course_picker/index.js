@@ -108,9 +108,7 @@ class CoursePicker extends Component {
    };
 
    setField(action) {
-      this.setState({ ...this.state, ...action.value }, () =>
-         console.log(this.state),
-      );
+      this.setState({ ...this.state, ...action.value });
    }
 
    chooseCourse = () => {
