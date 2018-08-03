@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { popPopup } from '../actions';
-import { deleteCourse } from '../../../user/actions';
+import { updateCourse, deleteCourse } from '../../../user/actions';
 import { CoursePicker, constants } from '../../../toolbox';
 import Header from '../components/header';
 import ColorPicker from '../components/colors';
@@ -93,6 +93,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
    return {
       popPopup: () => dispatch(popPopup()),
+      updateCourse: payload => dispatch(updateCourse(payload)),
       deleteCourse: payload => dispatch(deleteCourse(payload)),
    };
 };
@@ -103,8 +104,11 @@ class CourseInfoPopup extends Component {
          case 'delete-course':
             this.deleteCourse();
             break;
+         case 'choose-course':
+            this.chooseCourse(action.course);
+            break;
          default:
-            console.log('Empty action');
+            console.log('Empty action: ', action.type);
             break;
       }
    };
@@ -126,6 +130,23 @@ class CourseInfoPopup extends Component {
          id: block_metadata._id,
       });
    };
+
+   chooseCourse(course_data) {
+      const { user, data, year, quarter, blockIndex } = this.props;
+      let { block_metadata } = data;
+      const { config } = user;
+      block_metadata.catalog_id = course_data._id;
+      block_metadata.department = course_data.dept;
+      const course = { block_metadata, course_data };
+
+      this.props.updateCourse({
+         config,
+         year,
+         quarter,
+         index: blockIndex,
+         course
+      });
+   }
 
    render() {
       const { index, closing, data } = this.props;

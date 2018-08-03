@@ -144,7 +144,7 @@ const fetchActiveChart = (user, config, dispatch) => {
 };
 
 /* Sort the data returned from the API into a useable 2D array. This is
- * required so that we can keep track of what courses have been moved.
+ * required so that we can keep track of where to move courses (X and Y axis).
  */
 const sortChartData = (data, config) => {
    let { start_year } = config;
@@ -159,16 +159,16 @@ const sortChartData = (data, config) => {
       const seasons = { Fall: 0, Winter: 1, Spring: 2, Summer: 3 };
 
       for (let i in data) {
-         const { block_metadata } = data[i];
-         const { time } = block_metadata;
-         const year = time[0] - 1;
-         const quarter = seasons[time[1]];
-
          try {
+            const { block_metadata } = data[i];
+            const { time } = block_metadata;
+            const year = time[0] - 1;
+            const quarter = seasons[time[1]];
+
             newData[year].quarters[quarter].push(data[i]);
          } catch (e) {
-            console.log(block_metadata);
-            reject(e);
+            console.error("Error: couldn't load course")
+            console.error(e);
          }
       }
       resolve(newData);
@@ -331,28 +331,37 @@ export const updateCourse = ({ config, course, year, quarter, index }) => {
 export const addCourse = ({ config, quarterId, course_type, course_data }) => {
    const { years, seasons } = variable;
    const [year, quarter] = quarterId.split('-');
+   console.log(course_data._id);
+
    let block_metadata = {
-      time: [year + 1, seasons[quarter]],
+      catalog_id: course_data._id,
       course_type,
+      department: course_data.dept,
+      flags: [],
       ge_type: [null],
       notes: `You added this on ${new Date()
          .toJSON()
          .slice(0, 10)
          .replace(/-/g, '/')}`,
-      flags: [],
-      _id: course_data._id,
+      time: [year + 1, seasons[quarter]],
    };
-
-   let course = { block_metadata, course_data };
+   const course = { course_data, block_metadata };
 
    return dispatch => {
       const user = new UserManager(config);
 
+      dispatch({
+         type: 'ADD_COURSE_REQUEST',
+         year,
+         quarter,
+         course,
+      });
+
       return new Promise((resolve, reject) => {
          user
             .addCourse(block_metadata)
-            .then(response => {
-               course.block_metadata.catalog_id = response._id;
+            .then(course => {
+               console.log(course);
                resolve(course);
             })
             .catch(error => {
@@ -375,7 +384,7 @@ export const deleteCourse = ({ config, id, year, quarter, blockIndex }) => {
             type: 'DELETE_COURSE_REQUEST',
             year,
             quarter,
-            index: blockIndex
+            index: blockIndex,
          });
 
          user
@@ -384,11 +393,9 @@ export const deleteCourse = ({ config, id, year, quarter, blockIndex }) => {
                resolve();
             })
             .catch(error => {
-               alert(
-                  "Error: Couldn't delete the course.",
-               );
+               alert("Error: Couldn't delete the course.");
                dispatch({
-                  type: 'UPDATE_COURSE_FAILURE',
+                  type: 'DELETE_COURSE_FAILURE',
                });
                reject(error);
             });

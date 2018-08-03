@@ -18,6 +18,7 @@ const initialState = {
 
 const flowchartReducer = (state = initialState, action) => {
    let newChartData;
+   let quarter;
    switch (action.type) {
       case STOCK_CHART_SUCCESS:
          return {
@@ -57,6 +58,19 @@ const flowchartReducer = (state = initialState, action) => {
             ...state,
             chartData: action.chartData,
          };
+      case 'ADD_COURSE_REQUEST':
+         newChartData = state.chartData;
+         quarter = newChartData[action.year].quarters[action.quarter];
+         newChartData[action.year].quarters[action.quarter] = [
+            ...quarter,
+            action.course,
+         ];
+
+         return {
+            ...state,
+            prevChartData: state.chartData,
+            chartData: newChartData,
+         };
       case 'UPDATE_COURSE_REQUEST':
          newChartData = state.chartData;
          newChartData[action.year].quarters[action.quarter][action.index] =
@@ -74,7 +88,9 @@ const flowchartReducer = (state = initialState, action) => {
          };
       case 'DELETE_COURSE_REQUEST':
          newChartData = state.chartData;
-         const quarter = Array.from(newChartData[action.year].quarters[action.quarter]);
+         quarter = Array.from(
+            newChartData[action.year].quarters[action.quarter],
+         );
 
          newChartData[action.year].quarters[action.quarter] = [
             ...quarter.slice(0, action.index),
@@ -85,6 +101,12 @@ const flowchartReducer = (state = initialState, action) => {
             ...state,
             prevChartData: state.chartData,
             chartData: newChartData,
+         };
+      case 'DELETE_COURSE_FAILURE':
+         return {
+            ...state,
+            prevChartData: null,
+            chartData: state.prevChartData,
          };
       case 'GET_DEPARTMENTS_SUCCESS':
          return {

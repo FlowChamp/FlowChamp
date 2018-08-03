@@ -135,7 +135,7 @@ export default class UserManager {
       });
    }
 
-   addCourse(course) {
+   addCourse(block_metadata) {
       const { active_chart, username } = this.config;
 
       return this.makeRequest({
@@ -147,7 +147,7 @@ export default class UserManager {
             },
             credentials: this.credentials,
             mode: this.mode,
-            body: JSON.stringify(course),
+            body: JSON.stringify(block_metadata),
          },
       });
    }
