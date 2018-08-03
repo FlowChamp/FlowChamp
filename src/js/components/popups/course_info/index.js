@@ -120,7 +120,6 @@ class CourseInfoPopup extends Component {
 
    deleteCourse = () => {
       const { user, data, year, quarter, blockIndex } = this.props;
-      const { block_metadata } = data;
       const { config } = user;
 
       this.props.popPopup();
@@ -166,7 +165,7 @@ class CourseInfoPopup extends Component {
          return <Container />;
       }
       const { block_metadata, course_data } = data;
-      const { course_type, elective_title } = block_metadata;
+      const { course_type } = block_metadata;
       const multiCourse = Array.isArray(course_data);
       const hasCourseData = course_data !== undefined;
 

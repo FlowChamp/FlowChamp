@@ -30,6 +30,7 @@ const Input = styled.input.attrs({
    cursor: pointer;
    outline: none;
    transition: all 0.15s ease;
+   -webkit-appearance: none;
 
    &:focus {
       filter: brightness(1.1);

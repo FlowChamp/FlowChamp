@@ -90,7 +90,7 @@ const MenuButton = ({ isOpen, menuClicked }) => {
          borderRadius={8}
          strokeWidth={3}
          color={color.gray[8]}
-         isOpen={isOpen}
+         isOpen={!!isOpen}
          menuClicked={menuClicked}
       />
    );
