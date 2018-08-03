@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Icon, constants } from '../../../../toolbox/';
+import { Icon } from '../..';
+import constants from '../../constants';
 
 const { color } = constants;
 

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
-import { fetchCourses } from '../../../../apps/flowchart/actions';
-import { Button, Loader, constants } from '../../../../toolbox';
+import { fetchCourses } from '../../../apps/flowchart/actions';
+import { Button, Loader } from '../..';
+import constants from '../../constants';
 
 const { animation, color } = constants;
 const { fadeIn } = animation;

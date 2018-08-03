@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import CourseInfoPopup from './course_info';
+import CourseAdderPopup from './course_adder';
 
 const popups = {
-   'CourseInfo': <CourseInfoPopup />
+   'CourseInfo': <CourseInfoPopup />,
+   'CourseAdder': <CourseAdderPopup />
 };
 
 const Container = styled.div``;

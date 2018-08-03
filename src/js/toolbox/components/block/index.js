@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Draggable } from 'react-beautiful-dnd';
 import styled, { css } from 'styled-components';
-import { pushPopup } from '../../../../components/popups/actions';
+import { pushPopup } from '../../../components/popups/actions';
 import BlockContents from './contents';
 import './index.css';
 

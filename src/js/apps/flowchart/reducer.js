@@ -72,6 +72,20 @@ const flowchartReducer = (state = initialState, action) => {
             prevChartData: null,
             chartData: state.prevChartData,
          };
+      case 'DELETE_COURSE_REQUEST':
+         newChartData = state.chartData;
+         const quarter = Array.from(newChartData[action.year].quarters[action.quarter]);
+
+         newChartData[action.year].quarters[action.quarter] = [
+            ...quarter.slice(0, action.index),
+            ...quarter.slice(action.index + 1, quarter.length),
+         ];
+
+         return {
+            ...state,
+            prevChartData: state.chartData,
+            chartData: newChartData,
+         };
       case 'GET_DEPARTMENTS_SUCCESS':
          return {
             ...state,

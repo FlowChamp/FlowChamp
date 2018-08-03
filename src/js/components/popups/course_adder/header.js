@@ -74,49 +74,36 @@ const mapDispatchToProps = dispatch => {
 };
 
 class Header extends Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+         course_type: props.course_type,
+      };
+   }
+
+   static getDerivedStateFromProps(nextProps) {
+      return {
+         course_type: nextProps.course_type
+      }
+   }
+
    close = () => {
       this.props.popPopup();
    };
 
    render() {
-      const { year, quarter, blockIndex, flowchart } = this.props;
-      const data = flowchart.chartData[year].quarters[quarter][blockIndex];
-      const { block_metadata, course_data } = data;
-      const { course_type, elective_title } = block_metadata;
-      const multiCourse = Array.isArray(course_data);
-      const hasCourseData = course_data !== undefined;
+      const { course_type } = this.state;
 
       return (
          <Container courseType={course_type}>
             <TitleContainer>
-               <Title>
-                  {multiCourse
-                     ? 'Multiple Courses Available'
-                     : hasCourseData
-                        ? `${course_data.dept} ${course_data.course_number}`
-                        : elective_title || block_metadata.course_type}
-               </Title>
-               <Subtitle>
-                  {multiCourse
-                     ? `Select a predetermined course from the following list:`
-                     : hasCourseData
-                        ? `${course_data.title}`
-                        : `Select a ${
-                             block_metadata.course_type
-                          } course below:`}
-               </Subtitle>
+               <Title>Add a Course</Title>
+               <Subtitle>Select a course from below</Subtitle>
             </TitleContainer>
             <ActionContainer>
                <Icon name="x" onClick={this.props.popPopup} />
-               <CourseType>{block_metadata.course_type}</CourseType>
-               <Units>
-                  {multiCourse
-                     ? '4'
-                     : hasCourseData
-                        ? `${course_data.units} `
-                        : '4 '}
-                  Units
-               </Units>
+               <CourseType>{course_type}</CourseType>
+               <Units>? Units</Units>
             </ActionContainer>
          </Container>
       );

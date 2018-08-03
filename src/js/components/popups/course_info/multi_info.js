@@ -84,11 +84,14 @@ class MultiCourseInfo extends Component {
    render() {
       const { year, quarter, blockIndex, flowchart } = this.props;
       const data = flowchart.chartData[year].quarters[quarter][blockIndex];
+      if (!data || !Array.isArray(data.course_data)) {
+         return <Container />
+      }
       const { course_data, block_metadata } = data;
 
       return (
          <Container>
-            {course_data.map((course, index) => {
+            {course_data && course_data.map((course, index) => {
                return (
                   <Course key={`multi-course-info-${index}`}>
                      <Title>
