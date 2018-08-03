@@ -87,6 +87,7 @@ const ActionButton = styled.button`
 const mapStateToProps = state => {
    return {
       user: state.user,
+      flowchart: state.flowchart,
    };
 };
 
@@ -144,14 +145,25 @@ class CourseInfoPopup extends Component {
          year,
          quarter,
          index: blockIndex,
-         course
+         course,
       });
    }
 
    render() {
-      const { index, closing, data } = this.props;
-      const { course_data, block_metadata } = data;
-      const { course_type } = block_metadata;
+      const {
+         index,
+         closing,
+         flowchart,
+         year,
+         quarter,
+         blockIndex,
+      } = this.props;
+      const data = flowchart.chartData[year].quarters[quarter][blockIndex];
+      if (!data) {
+         return <Container />;
+      }
+      const { block_metadata, course_data } = data;
+      const { course_type, elective_title } = block_metadata;
       const multiCourse = Array.isArray(course_data);
       const hasCourseData = course_data !== undefined;
 
@@ -164,7 +176,7 @@ class CourseInfoPopup extends Component {
                {multiCourse ? (
                   <MultiCourseInfo {...this.props} />
                ) : hasCourseData ? (
-                  <Info {...this.props} />
+                  <Info data={data} />
                ) : (
                   <CoursePicker
                      {...this.props}
