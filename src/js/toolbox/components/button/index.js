@@ -48,6 +48,10 @@ const Label = styled.h2`
 
 const SubLabel = styled.h4`
    margin: 0;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   max-width: 14rem;
 `;
 
 const OptionsContainer = styled.div`

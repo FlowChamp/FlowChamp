@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { fetchCourses } from '../../../apps/flowchart/actions';
-import { Button, Loader } from '../..';
+import { Button, Loader, Icon } from '../..';
 import constants from '../../constants';
 
 const { animation, color } = constants;
@@ -22,6 +22,7 @@ const LoadingContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
+   position: relative;
    ${props =>
       props.selected &&
       css`
@@ -33,6 +34,42 @@ const ButtonContainer = styled.div`
             color: white;
          }
       `};
+   ${props =>
+      props.disabled &&
+      css`
+         h2, h3, h4 {
+            color: ${color.gray[4]};
+         }
+         pointer-events: none;
+         h3 {
+            font-weight: 300;
+            margin: 16px 0;
+         }
+         h4 {
+            opacity: 0;
+         }
+      `};
+`;
+
+const DisabledLabel = styled.div`
+   position: absolute;
+   display: flex;
+   align-items: flex-end;
+   width: 100%;
+   margin-top: 34px;
+
+   h3 {
+      font-size: 16px;
+      font-weight: 300;
+      margin: 0 0 5px 0;
+   }
+
+   svg {
+      height: 20px;
+      width: 20px;
+      margin: 0 8px 0 16px;
+      color: ${color.green[4]};
+   }
 `;
 
 const mapStateToProps = state => {
@@ -53,14 +90,14 @@ class CourseSelector extends Component {
       super(props);
       this.state = {
          department: props.department,
-         newDepartment: props.department
-      }
+         newDepartment: props.department,
+      };
    }
 
    static getDerivedStateFromProps(nextProps) {
       return {
-         newDepartment: nextProps.department
-      }
+         newDepartment: nextProps.department,
+      };
    }
 
    handleClick = course => {
@@ -102,33 +139,49 @@ class CourseSelector extends Component {
 
    render() {
       const { flowchart, course } = this.props;
-      const { departmentData } = flowchart;
+      const { departmentData, idList } = flowchart;
       const { department, fetching } = this.state;
 
       return (
          <Container key={`course-list-for-${department}`}>
-         {fetching ? (
-            <LoadingContainer>
-               <Loader />
-            </LoadingContainer>
-         ) : departmentData.map((deptItem, i) => {
-               return deptItem.name === department
-                  ? deptItem.courses &&
-                       deptItem.courses.map((item, j) => (
-                          <ButtonContainer
-                             key={`${item._id}-selector-button`}
-                             selected={course && (item._id === course._id)}>
-                             <Button
-                                label={item.course_number}
-                                sublabel={item.title}
-                                hideBorder
-                                padding="0.5rem 0.5rem 0.5rem 1rem;"
-                                onClick={() => this.handleClick(item)}
-                             />
-                          </ButtonContainer>
-                       ))
-                  : null;
-            })}
+            {fetching ? (
+               <LoadingContainer>
+                  <Loader />
+               </LoadingContainer>
+            ) : (
+               departmentData.map((deptItem, i) => {
+                  return deptItem.name === department
+                     ? deptItem.courses &&
+                          deptItem.courses.map((item, j) => {
+                             const disabled = !!idList[item._id];
+                             return (
+                                <ButtonContainer
+                                   key={`${item._id}-selector-button`}
+                                   selected={
+                                      !disabled &&
+                                      course &&
+                                      item._id === course._id
+                                   }
+                                   disabled={disabled}>
+                                   {disabled && (
+                                      <DisabledLabel>
+                                          <Icon name="check-circle" />
+                                          <h3>Added</h3>
+                                      </DisabledLabel>
+                                   )}
+                                   <Button
+                                      label={item.course_number}
+                                      sublabel={item.title}
+                                      padding="0.5rem 0.5rem 0.5rem 1rem;"
+                                      hideBorder
+                                      onClick={() => this.handleClick(item)}
+                                   />
+                                </ButtonContainer>
+                             );
+                          })
+                     : null;
+               })
+            )}
          </Container>
       );
    }

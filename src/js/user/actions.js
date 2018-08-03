@@ -128,10 +128,11 @@ const fetchActiveChart = (user, config, dispatch) => {
    user
       .getUserChart(config.active_chart)
       .then(chartData => {
-         sortChartData(chartData, config).then(sortedData => {
+         sortChartData(chartData, config).then(({sortedData, idList}) => {
             dispatch({
                type: 'GET_ACTIVE_CHART_SUCCESS',
                chartData: sortedData,
+               idList
             });
          });
       })
@@ -157,6 +158,7 @@ const sortChartData = (data, config) => {
 
    return new Promise((resolve, reject) => {
       const seasons = { Fall: 0, Winter: 1, Spring: 2, Summer: 3 };
+      let idList = {};
 
       for (let i in data) {
          try {
@@ -165,13 +167,17 @@ const sortChartData = (data, config) => {
             const year = time[0] - 1;
             const quarter = seasons[time[1]];
 
+            if (block_metadata.catalog_id) {
+               idList[block_metadata.catalog_id] = true;
+            }
+
             newData[year].quarters[quarter].push(data[i]);
          } catch (e) {
             console.error("Error: couldn't load course")
             console.error(e);
          }
       }
-      resolve(newData);
+      resolve({sortedData: newData, idList});
    });
 };
 

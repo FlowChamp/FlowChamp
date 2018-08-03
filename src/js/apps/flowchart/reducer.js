@@ -14,11 +14,13 @@ const initialState = {
    chartRevision: 0,
    chartData: [],
    departmentData: [],
+   idList: {},
 };
 
 const flowchartReducer = (state = initialState, action) => {
    let newChartData;
    let quarter;
+   let newIdList;
    switch (action.type) {
       case STOCK_CHART_SUCCESS:
          return {
@@ -48,6 +50,7 @@ const flowchartReducer = (state = initialState, action) => {
          return Object.assign({}, state, {
             fetching: false,
             chartData: action.chartData,
+            idList: action.idList,
          });
       case GET_ACTIVE_CHART_FAILURE:
          return Object.assign({}, state, {
@@ -70,6 +73,10 @@ const flowchartReducer = (state = initialState, action) => {
             ...state,
             prevChartData: state.chartData,
             chartData: newChartData,
+            idList: {
+               ...state.idList,
+               [action.course.course_data._id]: true,
+            },
          };
       case 'UPDATE_COURSE_REQUEST':
          newChartData = state.chartData;
@@ -88,9 +95,12 @@ const flowchartReducer = (state = initialState, action) => {
          };
       case 'DELETE_COURSE_REQUEST':
          newChartData = state.chartData;
+         newIdList = state.idList;
          quarter = Array.from(
             newChartData[action.year].quarters[action.quarter],
          );
+         const course = quarter[action.index];
+         delete newIdList[course.course_data._id];
 
          newChartData[action.year].quarters[action.quarter] = [
             ...quarter.slice(0, action.index),
@@ -101,6 +111,7 @@ const flowchartReducer = (state = initialState, action) => {
             ...state,
             prevChartData: state.chartData,
             chartData: newChartData,
+            idList: newIdList,
          };
       case 'DELETE_COURSE_FAILURE':
          return {

@@ -7,7 +7,7 @@ import { constants, Toggle } from '../../../toolbox';
 const { color, breakpoint } = constants;
 
 const Container = styled.div`
-   height: 46vh;
+   height: 40vh;
    overflow: auto;
    -webkit-overflow-scrolling: touch;
 
