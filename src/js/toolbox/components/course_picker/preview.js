@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { fetchCourses } from '../../../../apps/flowchart/actions';
-import { constants } from '../../../../toolbox';
-import BlockContents from '../../../../apps/flowchart/components/block/contents';
-import '../../../../apps/flowchart/components/block/index.css';
+import { fetchCourses } from '../../../apps/flowchart/actions';
+import constants from '../../constants';
+import BlockContents from '../../components/block/contents';
+import '../../components/block/index.css';
 
 const { color } = constants;
 

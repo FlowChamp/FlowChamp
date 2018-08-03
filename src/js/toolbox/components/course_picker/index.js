@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
-import { updateCourse } from '../../../../user/actions';
-import { popPopup } from '../../actions';
-import { constants } from '../../../../toolbox';
+import { Loader } from '../..';
+import constants from '../../constants';
 import DepartmentSelector from './department';
 import CourseSelector from './course_list';
 import CoursePreview from './preview';
@@ -47,6 +45,8 @@ const ActionBar = styled.div`
    justify-content: flex-end;
    align-items: center;
    padding: 0 8px;
+   background: ${color.grayAlpha[1]};
+   border-top: 1px solid ${color.gray[3]};
 `;
 
 const ActionButton = styled.button`
@@ -54,16 +54,20 @@ const ActionButton = styled.button`
    font-size: 16px;
    -webkit-appearance: none;
    border: none;
-   background: ${color.blue[4]};
+   background: ${props =>
+      props.color ? color[props.color][4] : color.blue[4]};
    border-radius: 4px;
    color: white;
    margin: 0 8px;
    font-weight: 300;
    outline: none;
    transition: background 0.1s ease;
+   cursor: ${props => !props.disabled && 'pointer'};
 
    &:hover {
-      background: ${color.blue[5]};
+      background: ${props =>
+         !props.disabled &&
+         (props.color ? color[props.color][5] : color.blue[5])};
    }
 
    ${props =>
@@ -74,25 +78,23 @@ const ActionButton = styled.button`
       `};
 `;
 
-const mapStateToProps = state => {
-   return {
-      user: state.user,
-      flowchart: state.flowchart,
-   };
-};
-
-const mapDispatchToProps = dispatch => {
-   return {
-      updateCourse: payload => dispatch(updateCourse(payload)),
-      popPopup: () => dispatch(popPopup()),
-   };
-};
-
 class CoursePicker extends Component {
-   state = {
-      department: null,
-      course: null,
-   };
+   constructor(props) {
+      super(props);
+      this.state = {
+         course_type: props.course_type,
+         department: null,
+         course: null,
+         fetching: false,
+      };
+   }
+
+   static getDerivedStateFromProps(nextProps) {
+      return {
+         course_type: nextProps.course_type,
+         fetching: nextProps.fetching,
+      };
+   }
 
    handleEvent = action => {
       switch (action.type) {
@@ -113,29 +115,19 @@ class CoursePicker extends Component {
 
    chooseCourse = () => {
       const { course } = this.state;
-      console.log(course);
-      this.props.popPopup();
-   }
-
-   updateCourse = (id, value) => {
-      const { user, flowchart, year, quarter, blockIndex } = this.props;
-      const { config } = user;
-      let data = flowchart.chartData[year].quarters[quarter][blockIndex];
-
-      const newCourse = data;
-      newCourse.block_metadata.activeId = !!value ? id : null;
-
-      this.props.updateCourse({
-         config,
-         course: newCourse,
-         year,
-         quarter,
-         index: blockIndex,
+      this.props.onEvent({
+         type: 'choose-course',
+         course,
       });
    };
 
+   deleteCourse = () => {
+      this.props.onEvent({
+         type: 'delete-course'
+      });
+   }
+
    componentDidUpdate(prevProps, prevState) {
-      console.log(prevProps, prevState);
       if (
          prevState.department !== this.state.department ||
          prevState.course !== this.state.course
@@ -151,10 +143,7 @@ class CoursePicker extends Component {
    }
 
    render() {
-      const { year, quarter, blockIndex, flowchart } = this.props;
-      const data = flowchart.chartData[year].quarters[quarter][blockIndex];
-      const { block_metadata } = data;
-      const { department, course } = this.state;
+      const { department, course, course_type } = this.state;
 
       return (
          <Container>
@@ -178,19 +167,26 @@ class CoursePicker extends Component {
                      <Pane>
                         <CoursePreview
                            {...this.state}
-                           course_type={block_metadata.course_type}
+                           course_type={course_type}
                         />
                      </Pane>
                   )}
             </PickerContainer>
 
             <ActionBar>
-            <ActionButton disabled={!course}
-            onClick={this.chooseCourse}>Choose Course</ActionButton>
+               {this.props.canDelete && (
+                  <ActionButton color="red" onClick={this.deleteCourse}>
+                     Delete Block
+                  </ActionButton>
+               )}
+               {this.props.fetching && <Loader />}
+               <ActionButton disabled={!course} onClick={this.chooseCourse}>
+                  Select Course
+               </ActionButton>
             </ActionBar>
          </Container>
       );
    }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CoursePicker);
+export default CoursePicker;

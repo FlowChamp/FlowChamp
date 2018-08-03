@@ -4,6 +4,7 @@ import borderRadius from './borderRadius';
 import color from './color';
 import animation from './animation';
 import breakpoint from './breakpoint';
+import variable from './variable'
 /*
 import fontSize from './fontSize';
 import lineHeight from './lineHeight';
@@ -20,6 +21,7 @@ export default {
    color,
    animation,
    breakpoint,
+   variable,
 /*
    fontSize,
    lineHeight,

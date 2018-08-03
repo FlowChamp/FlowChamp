@@ -135,6 +135,40 @@ export default class UserManager {
       });
    }
 
+   addCourse(block_metadata) {
+      const { active_chart, username } = this.config;
+
+      return this.makeRequest({
+         url: `${this.url}/users/${username}/charts/${active_chart}`,
+         data: {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            credentials: this.credentials,
+            mode: this.mode,
+            body: JSON.stringify(block_metadata),
+         },
+      });
+   }
+
+   deleteCourse(id) {
+      const { active_chart, username } = this.config;
+
+      return this.makeRequest({
+         url: `${this.url}/users/${username}/charts/${active_chart}/${id}`,
+         data: {
+            method: 'DELETE',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            credentials: this.credentials,
+            mode: this.mode,
+            body: JSON.stringify(id),
+         },
+      });
+   }
+
    makeRequest(options) {
       const { url, data } = options;
 

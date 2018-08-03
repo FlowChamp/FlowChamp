@@ -74,6 +74,9 @@ class ColorPicker extends Component {
    render() {
       const { year, quarter, blockIndex, flowchart } = this.props;
       const data = flowchart.chartData[year].quarters[quarter][blockIndex];
+      if (!data) {
+         return <Container />;
+      }
       const { block_metadata } = data;
 
       return (

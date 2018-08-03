@@ -1,4 +1,5 @@
 import UserManager from '../api/user_manager';
+import { constants } from '../toolbox';
 
 import {
    LOGIN_REQUEST,
@@ -19,6 +20,8 @@ import {
    DELETE_CHART_REQUEST,
    DELETE_CHART_SUCCESS,
 } from './constants';
+
+const { variable } = constants;
 
 // Query the API with the provided username, password, and remember bool
 export const logIn = credentials => {
@@ -141,7 +144,7 @@ const fetchActiveChart = (user, config, dispatch) => {
 };
 
 /* Sort the data returned from the API into a useable 2D array. This is
- * required so that we can keep track of what courses have been moved.
+ * required so that we can keep track of where to move courses (X and Y axis).
  */
 const sortChartData = (data, config) => {
    let { start_year } = config;
@@ -156,16 +159,16 @@ const sortChartData = (data, config) => {
       const seasons = { Fall: 0, Winter: 1, Spring: 2, Summer: 3 };
 
       for (let i in data) {
-         const { block_metadata } = data[i];
-         const { time } = block_metadata;
-         const year = time[0] - 1;
-         const quarter = seasons[time[1]];
-
          try {
+            const { block_metadata } = data[i];
+            const { time } = block_metadata;
+            const year = time[0] - 1;
+            const quarter = seasons[time[1]];
+
             newData[year].quarters[quarter].push(data[i]);
          } catch (e) {
-            console.log(block_metadata);
-            reject(e);
+            console.error("Error: couldn't load course")
+            console.error(e);
          }
       }
       resolve(newData);
@@ -298,15 +301,13 @@ export const updateCourse = ({ config, course, year, quarter, index }) => {
    return dispatch => {
       const user = new UserManager(config);
 
-      dispatch(
-         dispatch({
-            type: 'UPDATE_COURSE_REQUEST',
-            course,
-            year,
-            quarter,
-            index,
-         }),
-      );
+      dispatch({
+         type: 'UPDATE_COURSE_REQUEST',
+         course,
+         year,
+         quarter,
+         index,
+      });
 
       return new Promise((resolve, reject) => {
          user
@@ -320,6 +321,79 @@ export const updateCourse = ({ config, course, year, quarter, index }) => {
                );
                dispatch({
                   type: 'UPDATE_COURSE_FAILURE',
+               });
+               reject(error);
+            });
+      });
+   };
+};
+
+export const addCourse = ({ config, quarterId, course_type, course_data }) => {
+   const { seasons } = variable;
+   const [year, quarter] = quarterId.split('-');
+
+   let block_metadata = {
+      catalog_id: course_data._id,
+      course_type,
+      department: course_data.dept,
+      flags: [],
+      ge_type: [null],
+      notes: `You added this on ${new Date()
+         .toJSON()
+         .slice(0, 10)
+         .replace(/-/g, '/')}`,
+      time: [year + 1, seasons[quarter]],
+   };
+   const course = { course_data, block_metadata };
+
+   return dispatch => {
+      const user = new UserManager(config);
+
+      dispatch({
+         type: 'ADD_COURSE_REQUEST',
+         year,
+         quarter,
+         course,
+      });
+
+      return new Promise((resolve, reject) => {
+         user
+            .addCourse(block_metadata)
+            .then(course => {
+               resolve(course);
+            })
+            .catch(error => {
+               alert("Couln't add course :/");
+               dispatch({
+                  type: 'ADD_COURSE_FAILURE',
+               });
+               reject(error);
+            });
+      });
+   };
+};
+
+export const deleteCourse = ({ config, id, year, quarter, blockIndex }) => {
+   return dispatch => {
+      const user = new UserManager(config);
+
+      return new Promise((resolve, reject) => {
+         dispatch({
+            type: 'DELETE_COURSE_REQUEST',
+            year,
+            quarter,
+            index: blockIndex,
+         });
+
+         user
+            .deleteCourse(id)
+            .then(response => {
+               resolve();
+            })
+            .catch(error => {
+               alert("Error: Couldn't delete the course.");
+               dispatch({
+                  type: 'DELETE_COURSE_FAILURE',
                });
                reject(error);
             });
