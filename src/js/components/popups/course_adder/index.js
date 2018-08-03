@@ -108,7 +108,7 @@ class CourseAdderPopup extends Component {
    };
 
    render() {
-      const { index, quarterId, closing } = this.props;
+      const { index, closing } = this.props;
       const { course_type, fetching } = this.state;
 
       return (

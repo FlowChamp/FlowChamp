@@ -329,9 +329,8 @@ export const updateCourse = ({ config, course, year, quarter, index }) => {
 };
 
 export const addCourse = ({ config, quarterId, course_type, course_data }) => {
-   const { years, seasons } = variable;
+   const { seasons } = variable;
    const [year, quarter] = quarterId.split('-');
-   console.log(course_data._id);
 
    let block_metadata = {
       catalog_id: course_data._id,
@@ -361,7 +360,6 @@ export const addCourse = ({ config, quarterId, course_type, course_data }) => {
          user
             .addCourse(block_metadata)
             .then(course => {
-               console.log(course);
                resolve(course);
             })
             .catch(error => {

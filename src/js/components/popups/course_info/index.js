@@ -151,7 +151,7 @@ class CourseInfoPopup extends Component {
    render() {
       const { index, closing, data } = this.props;
       const { course_data, block_metadata } = data;
-      const { course_type, _id } = block_metadata;
+      const { course_type } = block_metadata;
       const multiCourse = Array.isArray(course_data);
       const hasCourseData = course_data !== undefined;
 

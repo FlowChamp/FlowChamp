@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
-import { updateCourse } from '../../../user/actions';
-import { popPopup } from '../../../components/popups/actions';
 import { Loader } from '../..';
 import constants from '../../constants';
 import DepartmentSelector from './department';
@@ -80,13 +77,6 @@ const ActionButton = styled.button`
          background: ${color.blue[2]};
       `};
 `;
-
-const mapStateToProps = state => {
-   return {
-      user: state.user,
-      flowchart: state.flowchart,
-   };
-};
 
 class CoursePicker extends Component {
    constructor(props) {
